@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Work_Sans, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui";
 
 /* ── Font Definitions ──────────────────────────────────────
    Work Sans   → Display, headings (H1–H3)
@@ -80,7 +81,10 @@ export default function RootLayout({
       lang="en"
       className={`${workSans.variable} ${inter.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
