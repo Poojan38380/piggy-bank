@@ -14,20 +14,20 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <LandingNav />
-      
+
       <main className="flex-1">
         <Hero />
-        
+
         {/* Subtle spacing between sections */}
         <div className="h-xxl" />
-        
+
         <Features />
-        
+
         <HowItWorks />
-        
+
         <LandingCTA />
       </main>
-      
+
       <LandingFooter />
     </div>
   );
