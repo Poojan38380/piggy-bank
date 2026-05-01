@@ -42,7 +42,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       "input",
       isAmount ? "input-amount" : "",
       error ? "input-error" : "",
-      isAmount ? "pl-10" : "",           // space for ₹ prefix
       className,
     ]
       .filter(Boolean)
@@ -66,15 +65,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               aria-hidden="true"
               style={{
                 position: "absolute",
-                left: 14,
+                left: 16,
                 top: "50%",
                 transform: "translateY(-50%)",
                 fontFamily: "var(--font-mono)",
-                fontSize: isAmount ? "1.25rem" : "1rem",
+                fontSize: "20px",
                 fontWeight: 600,
-                color: "var(--color-on-surface-variant)",
+                color: "var(--color-navy)",
                 pointerEvents: "none",
                 userSelect: "none",
+                opacity: 0.5,
               }}
             >
               ₹

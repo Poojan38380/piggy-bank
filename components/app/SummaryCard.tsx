@@ -43,8 +43,8 @@ export function SummaryCard({
       <div
         style={{
           display: "flex",
-          alignItems: "baseline",
-          gap: "var(--space-sm)",
+          flexDirection: "column",
+          gap: 2,
         }}
       >
         <h2
@@ -61,7 +61,11 @@ export function SummaryCard({
         </h2>
         <span
           className="text-body-sm"
-          style={{ color: "var(--color-on-surface-variant)" }}
+          style={{ 
+            color: "var(--color-on-surface-variant)",
+            opacity: 0.8,
+            letterSpacing: "0.01em"
+          }}
         >
           across {count} {count === 1 ? "item" : "items"}
         </span>

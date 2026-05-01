@@ -354,6 +354,7 @@ body {
   font-size: 24px;
   font-weight: 600;
   letter-spacing: 0;
+  padding-left: 44px !important; /* clear the Rupee symbol */
 }
 
 /* --- Cards --- */
