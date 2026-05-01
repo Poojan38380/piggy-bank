@@ -1,65 +1,109 @@
-import Image from "next/image";
+import { LandingNav } from "@/components/landing/LandingNav";
+import { Hero } from "@/components/landing/Hero";
+import { Features } from "@/components/landing/Features";
+import { HowItWorks } from "@/components/landing/HowItWorks";
+import { LandingCTA, LandingFooter } from "@/components/landing/LandingCTA";
 
-export default function Home() {
+/**
+ * PiggyBank Landing Page
+ * 
+ * A high-fidelity, marketing-first landing page built as a Server Component.
+ * Optimized for SEO and performance (Zero Client JS for initial render).
+ */
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div 
+      className="min-h-screen bg-bg" 
+      style={{ 
+        backgroundColor: "var(--color-bg)",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      <LandingNav />
+      
+      <main style={{ flex: 1 }}>
+        <Hero />
+        
+        {/* Subtle spacing between sections */}
+        <div style={{ height: "var(--space-xxl)" }} />
+        
+        <Features />
+        
+        <HowItWorks />
+        
+        <LandingCTA />
       </main>
+      
+      <LandingFooter />
+
+      {/* Global Landing-specific overrides (Responsive) */}
+      <style>{`
+        .hero-content-row {
+          display: flex;
+          align-items: center;
+          gap: var(--space-xxl);
+        }
+        
+        .hero-left { flex: 1.2; }
+        .hero-right { flex: 1; }
+
+        .features-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--space-lg);
+        }
+
+        .steps-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        .steps-connector {
+          display: block;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 1024px) {
+          .hero-content-row {
+            flex-direction: column;
+            text-align: center;
+          }
+          .hero-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .hero-right {
+            width: 100%;
+            max-width: 500px;
+          }
+          .features-grid {
+            grid-template-columns: 1fr;
+          }
+          .md-flex-pill {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .steps-container {
+            flex-direction: column;
+            gap: var(--space-xl);
+          }
+          .steps-connector {
+            top: 0;
+            bottom: 0;
+            left: 32px;
+            width: 1px;
+            height: 100%;
+          }
+          .step-item {
+            width: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
