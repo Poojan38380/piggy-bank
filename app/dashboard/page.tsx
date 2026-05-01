@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Suspense } from "react";
 import { useExpenses } from "@/hooks/useExpenses";
 import { AppHeader } from "@/components/app/AppHeader";
@@ -28,9 +27,9 @@ function DashboardContent() {
       {/* LEFT PANEL: Branding + Add Expense */}
       <aside className="w-full lg:w-[40%] p-lg lg:p-xxl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-background border-b lg:border-b-0 lg:border-r border-divider">
         <AppHeader />
-        
+
         <div className="flex flex-col gap-xl">
-          <SummaryCard 
+          <SummaryCard
             totalFormatted={meta?.visibleTotalFormatted}
             count={meta?.total}
             isLoading={isLoading}
@@ -45,7 +44,7 @@ function DashboardContent() {
 
       {/* RIGHT PANEL: Filters + List */}
       <main className="w-full lg:w-[60%] p-lg lg:p-xxl bg-panel min-h-screen">
-        <ExpenseFilters 
+        <ExpenseFilters
           activeCategory={filters.category}
           onCategoryChange={setCategory}
           isSortDesc={filters.sortDesc}
@@ -63,13 +62,16 @@ function DashboardContent() {
   );
 }
 
+import { DashboardSkeleton } from "@/components/app/DashboardSkeleton";
+
 /**
  * Main Dashboard Entry Point
  */
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<div className="p-xxl font-mono text-navy">Loading Dashboard...</div>}>
+    <Suspense fallback={<DashboardSkeleton />}>
       <DashboardContent />
     </Suspense>
   );
 }
+

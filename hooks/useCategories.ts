@@ -1,27 +1,27 @@
 "use client";
 
-import * as React from "react";
 import { PRESET_CATEGORIES } from "@/lib/categories";
 import { ApiResponse } from "@/types";
+import { useEffect, useState } from "react";
 
 /**
  * useCategories — Manages the list of available categories.
  */
 export function useCategories() {
-  const [categories, setCategories] = React.useState<string[]>(PRESET_CATEGORIES);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [categories, setCategories] = useState<string[]>(PRESET_CATEGORIES);
+  const [isLoading, setIsLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function load() {
       try {
         const res = await fetch("/api/expenses/categories");
         if (!res.ok) return;
-        
+
         const response: ApiResponse<string[]> = await res.json();
         if (!response.success) return;
-        
+
         const dbCategories = response.data;
-        
+
         // Merge presets with DB categories, ensuring uniqueness
         setCategories((prev) => {
           const combined = new Set([...prev, ...dbCategories]);

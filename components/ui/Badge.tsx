@@ -1,4 +1,3 @@
-import * as React from "react";
 import { getCategoryColor } from "@/lib/categories";
 
 interface BadgeProps {
@@ -39,7 +38,7 @@ interface StatusBadgeProps {
 
 const STATUS_STYLES: Record<StatusVariant, { bg: string; text: string }> = {
   success: { bg: "#D1FAE5", text: "#065F46" },
-  error:   { bg: "#FEE2E2", text: "#991B1B" },
+  error: { bg: "#FEE2E2", text: "#991B1B" },
   warning: { bg: "#FEF3C7", text: "#92400E" },
   neutral: { bg: "#F1F5F9", text: "#475569" },
 };

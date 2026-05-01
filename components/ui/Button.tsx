@@ -1,4 +1,4 @@
-import * as React from "react";
+import { forwardRef } from "react";
 
 type ButtonVariant = "primary" | "ghost" | "teal" | "teal-soft";
 type ButtonSize = "sm" | "md" | "lg";
@@ -26,7 +26,7 @@ const sizeClass: Record<ButtonSize, string> = {
   lg: "text-[16px] px-8 py-4",
 };
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       variant = "primary",

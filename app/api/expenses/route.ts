@@ -17,12 +17,19 @@ export async function GET(request: Request) {
   try {
     const where: Prisma.ExpenseWhereInput = category && category !== "all" ? { category } : {};
     
-    const dbExpenses = await prisma.expense.findMany({
-      where,
-      orderBy: { date: sort === "desc" ? "desc" : "asc" },
-    });
+    // 1. Fetch items and total sum in parallel for performance
+    const [dbExpenses, aggregation] = await Promise.all([
+      prisma.expense.findMany({
+        where,
+        orderBy: { date: sort === "desc" ? "desc" : "asc" },
+      }),
+      prisma.expense.aggregate({
+        where,
+        _sum: { amount: true },
+      }),
+    ]);
 
-    // 1. Transform DB models to UI Types (adding formatted strings)
+    // 2. Transform DB models to UI Types
     const items: Expense[] = dbExpenses.map((e) => ({
       id: e.id,
       amount: e.amount,
@@ -34,8 +41,7 @@ export async function GET(request: Request) {
       idempotencyKey: e.idempotencyKey,
     }));
 
-    // 2. Compute Meta
-    const totalPaise = items.reduce((sum, item) => sum + item.amount, 0);
+    const totalPaise = aggregation._sum.amount || 0;
 
     const data: ExpenseListResponse = {
       items,
@@ -80,65 +86,63 @@ export async function POST(request: Request) {
 
     const { amount, category, description, date, idempotencyKey } = result.data;
 
-    // 2. Check for Idempotency
-    const existing = await prisma.expense.findUnique({
-      where: { idempotencyKey },
-    });
+    // 2. Optimized Atomic Idempotency
+    // We attempt to create first. If it fails with P2002, we know it exists.
+    // This is faster and avoids race conditions compared to find-then-create.
+    try {
+      const paise = toPaise(amount);
+      if (paise === null) throw new Error("Invalid amount format");
 
-    if (existing) {
-      // Record already exists, return it to fulfill idempotency
-      const expense: Expense = {
-        id: existing.id,
-        amount: existing.amount,
-        amountFormatted: formatCurrency(existing.amount),
-        category: existing.category,
-        description: existing.description,
-        date: existing.date.toISOString().split("T")[0],
-        createdAt: existing.createdAt.toISOString(),
-        idempotencyKey: existing.idempotencyKey,
-      };
+      const created = await prisma.expense.create({
+        data: {
+          amount: paise,
+          category,
+          description,
+          date: new Date(date),
+          idempotencyKey,
+        },
+      });
 
       return NextResponse.json({
         success: true,
-        data: expense,
-        idempotent: true
-      } as ApiResponse<Expense>);
+        data: {
+          id: created.id,
+          amount: created.amount,
+          amountFormatted: formatCurrency(created.amount),
+          category: created.category,
+          description: created.description,
+          date: created.date.toISOString().split("T")[0],
+          createdAt: created.createdAt.toISOString(),
+          idempotencyKey: created.idempotencyKey,
+        }
+      } as ApiResponse<Expense>, { status: 201 });
+
+    } catch (e) {
+      // Check for Prisma unique constraint error
+      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+        const existing = await prisma.expense.findUnique({
+          where: { idempotencyKey },
+        });
+        
+        if (existing) {
+          return NextResponse.json({
+            success: true,
+            data: {
+              id: existing.id,
+              amount: existing.amount,
+              amountFormatted: formatCurrency(existing.amount),
+              category: existing.category,
+              description: existing.description,
+              date: existing.date.toISOString().split("T")[0],
+              createdAt: existing.createdAt.toISOString(),
+              idempotencyKey: existing.idempotencyKey,
+            },
+            idempotent: true
+          } as ApiResponse<Expense>);
+        }
+      }
+      throw e; // Rethrow if not a P2002 or record not found
     }
-
-    // 3. Create new record
-    const paise = toPaise(amount);
-    if (paise === null) {
-      return NextResponse.json({ 
-        success: false, 
-        error: "Invalid amount" 
-      } as ApiResponse<never>, { status: 400 });
-    }
-
-    const created = await prisma.expense.create({
-      data: {
-        amount: paise,
-        category,
-        description,
-        date: new Date(date),
-        idempotencyKey,
-      },
-    });
-
-    const expense: Expense = {
-      id: created.id,
-      amount: created.amount,
-      amountFormatted: formatCurrency(created.amount),
-      category: created.category,
-      description: created.description,
-      date: created.date.toISOString().split("T")[0],
-      createdAt: created.createdAt.toISOString(),
-      idempotencyKey: created.idempotencyKey,
-    };
-
-    return NextResponse.json({
-      success: true,
-      data: expense
-    } as ApiResponse<Expense>, { status: 201 });
 
   } catch (error) {
     console.error("API_EXPENSES_POST_ERROR", error);
@@ -148,3 +152,4 @@ export async function POST(request: Request) {
     } as ApiResponse<never>, { status: 500 });
   }
 }
+

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { forwardRef, useRef } from "react";
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -12,14 +12,14 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 
 let _idCounter = 0;
 function useId(provided?: string): string {
-  const ref = React.useRef<string | null>(null);
+  const ref = useRef<string | null>(null);
   if (!ref.current) {
     ref.current = provided ?? `select-${++_idCounter}`;
   }
   return ref.current;
 }
 
-export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
     {
       label,
@@ -37,7 +37,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     const errorId = `${id}-error`;
 
     const baseInputClass = "w-full font-sans text-[16px] font-normal text-on-surface bg-surface border-[1px] border-[rgba(50,65,88,0.20)] rounded-[10px] px-4 py-3 outline-none transition-all cursor-pointer appearance-none pr-10 focus:border-teal focus:ring-3 focus:ring-teal/10";
-    
+
     const selectClass = [
       baseInputClass,
       error ? "border-error focus:border-error focus:ring-error/10" : "",

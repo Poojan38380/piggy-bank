@@ -1,6 +1,7 @@
-import * as React from "react";
 
 // ── Input ─────────────────────────────────────────────────
+
+import { forwardRef, useRef } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -14,14 +15,14 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 let _idCounter = 0;
 function useId(provided?: string): string {
-  const ref = React.useRef<string | null>(null);
+  const ref = useRef<string | null>(null);
   if (!ref.current) {
     ref.current = provided ?? `input-${++_idCounter}`;
   }
   return ref.current;
 }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       label,
@@ -39,7 +40,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const helperId = `${id}-helper`;
 
     const baseInputClass = "w-full font-sans text-[16px] font-normal text-on-surface bg-surface border-[1px] border-[rgba(50,65,88,0.20)] rounded-[10px] px-4 py-3 outline-none transition-all placeholder:text-outline placeholder:font-normal focus:border-teal focus:ring-3 focus:ring-teal/10";
-    
+
     const inputClass = [
       baseInputClass,
       isAmount ? "font-mono text-[24px] font-semibold pl-[44px]" : "",
@@ -119,7 +120,7 @@ interface TextareaProps
   id?: string;
 }
 
-export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, helper, id: providedId, className = "", ...props }, ref) => {
     const id = useId(providedId);
     const errorId = `${id}-error`;

@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
 import { useCategories } from "@/hooks/useCategories";
 import { useCreateExpense } from "@/hooks/useCreateExpense";
 import { Button, Input, toast } from "@/components/ui";
 import { expenseFormSchema, type ExpenseFormValues } from "@/lib/validations";
+import { useState } from "react";
 
 interface ExpenseFormProps {
   onSuccess?: () => void;
@@ -18,14 +18,14 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const { create, isSubmitting } = useCreateExpense();
 
   // Form State
-  const [values, setValues] = React.useState<ExpenseFormValues>({
+  const [values, setValues] = useState<ExpenseFormValues>({
     amount: "",
     category: "Food",
     description: "",
     date: new Date().toISOString().split("T")[0], // YYYY-MM-DD
   });
 
-  const [errors, setErrors] = React.useState<Partial<Record<keyof ExpenseFormValues, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof ExpenseFormValues, string>>>({});
 
   // Handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -46,24 +46,25 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
 
     const result = expenseFormSchema.safeParse(values);
     if (!result.success) {
-      const fieldErrors: any = {};
+      const fieldErrors: Partial<Record<keyof ExpenseFormValues, string>> = {};
       result.error.issues.forEach(issue => {
-        fieldErrors[issue.path[0]] = issue.message;
+        fieldErrors[issue.path[0] as keyof ExpenseFormValues] = issue.message;
       });
       setErrors(fieldErrors);
       return;
     }
 
+
     try {
       await create(result.data);
       toast.success("Expense logged", `${result.data.description} added successfully.`);
-      
+
       setValues(prev => ({
         ...prev,
         amount: "",
         description: "",
       }));
-      
+
       onSuccess?.();
     } catch (err) {
       toast.error("Failed to save", "Please check your connection and try again.");
@@ -71,7 +72,7 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   };
 
   return (
-    <form 
+    <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-lg"
     >
@@ -91,19 +92,25 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
 
       {/* Category Pills */}
       <div className="flex flex-col gap-2">
-        <label className="text-label text-on-surface-variant opacity-70">
+        <label id="category-label" className="text-label text-on-surface-variant opacity-70">
           Category
         </label>
-        <div className="flex flex-wrap gap-2">
+        <div
+          role="radiogroup"
+          aria-labelledby="category-label"
+          className="flex flex-wrap gap-2"
+        >
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
+              role="radio"
+              aria-checked={values.category === cat}
               onClick={() => setCategory(cat)}
               className={`
                 px-3 py-1.5 rounded-full border-[1.5px] transition-all font-mono text-[12px] cursor-pointer
-                ${values.category === cat 
-                  ? "bg-navy border-navy text-white" 
+                ${values.category === cat
+                  ? "bg-navy border-navy text-white"
                   : "bg-transparent border-outline-variant text-body-text hover:border-teal hover:bg-surface-container-low"}
               `}
             >
@@ -112,6 +119,7 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
           ))}
         </div>
       </div>
+
 
       {/* Description */}
       <Input
@@ -133,9 +141,9 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         error={errors.date}
       />
 
-      <Button 
-        type="submit" 
-        isLoading={isSubmitting} 
+      <Button
+        type="submit"
+        isLoading={isSubmitting}
         fullWidth
         withArrow
         className="mt-sm"
