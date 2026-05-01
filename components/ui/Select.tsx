@@ -1,3 +1,4 @@
+"use client"
 import { forwardRef, useRef } from "react";
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
