@@ -15,14 +15,14 @@ export function AppHeader() {
   return (
     <header className="flex justify-between items-center mb-xl">
       <Link
-        href="/dashboard"
+        href="/"
         className="font-display text-[20px] font-bold text-navy tracking-tight lowercase flex items-center gap-sm no-underline group"
       >
-        <Image 
-          src="/logos/logo.png" 
-          alt="PiggyBank Logo" 
-          width={28} 
-          height={28} 
+        <Image
+          src="/logos/logo.png"
+          alt="PiggyBank Logo"
+          width={28}
+          height={28}
           className="object-contain transition-transform group-hover:scale-110"
         />
         piggybank.

@@ -4,6 +4,7 @@ import { createExpenseSchema } from "@/lib/validations";
 import { toPaise, formatCurrency } from "@/lib/money";
 import { Expense, ApiResponse, ExpenseListResponse } from "@/types";
 import { Prisma } from "@prisma/client";
+import { auth } from "@/lib/auth";
 
 // ── BUG-10 FIX: Simple in-memory rate limiter (per IP, 30 req/min) ────────
 // NOTE: This is a single-instance in-memory store. In production with multiple
@@ -34,7 +35,7 @@ function getClientIp(request: Request): string {
 
 /**
  * GET /api/expenses
- * Lists expenses with filtering and sorting.
+ * Lists expenses for the current user with filtering and sorting.
  */
 export async function GET(request: Request) {
   const ip = getClientIp(request);
@@ -45,13 +46,23 @@ export async function GET(request: Request) {
     );
   }
 
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" } as ApiResponse<never>,
+      { status: 401 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const sort = searchParams.get("sort") || "desc";
 
   try {
-    const where: Prisma.ExpenseWhereInput =
-      category && category !== "all" ? { category } : {};
+    const where: Prisma.ExpenseWhereInput = {
+      userId: session.user.id,
+      ...(category && category !== "all" ? { category } : {}),
+    };
 
     // Fetch items and total sum in parallel for performance
     const [dbExpenses, aggregation] = await Promise.all([
@@ -103,7 +114,7 @@ export async function GET(request: Request) {
 
 /**
  * POST /api/expenses
- * Idempotent creation of a new expense.
+ * Idempotent creation of a new expense for the current user.
  */
 export async function POST(request: Request) {
   const ip = getClientIp(request);
@@ -111,6 +122,14 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { success: false, error: "Too many requests — slow down." } as ApiResponse<never>,
       { status: 429 }
+    );
+  }
+
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" } as ApiResponse<never>,
+      { status: 401 }
     );
   }
 
@@ -160,6 +179,7 @@ export async function POST(request: Request) {
           description,
           date: new Date(date),
           idempotencyKey,
+          userId: session.user.id,
         },
       });
 

@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 
 /**
  * Next.js 16 Proxy (formerly Middleware)
- * Protects dashboard and analytics routes.
+ * Handles route protection and auth redirects.
  */
 export const proxy = auth((req) => {
   const { nextUrl } = req;
@@ -11,9 +11,17 @@ export const proxy = auth((req) => {
   const isProtectedRoute = 
     nextUrl.pathname.startsWith("/dashboard") || 
     nextUrl.pathname.startsWith("/analytics");
+  
+  const isAuthRoute = nextUrl.pathname === "/login";
 
+  // 1. If on a protected route and not logged in, go to login
   if (isProtectedRoute && !isLoggedIn) {
     return Response.redirect(new URL("/login", nextUrl));
+  }
+
+  // 2. If on the login page and ALREADY logged in, go to dashboard
+  if (isAuthRoute && isLoggedIn) {
+    return Response.redirect(new URL("/dashboard", nextUrl));
   }
 });
 
