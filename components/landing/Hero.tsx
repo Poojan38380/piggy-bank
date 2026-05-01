@@ -1,117 +1,50 @@
 import Link from "next/link";
 
-/**
- * Hero — Full landing page hero section.
- * Server Component. Matches Stitch landing-page.html design.
- *
- * Left: stat pills → H1 headline → sub-text → CTAs
- * Right: abstract app mockup visual
- */
 export function Hero() {
   return (
-    <section
-      style={{
-        position: "relative",
-        maxWidth: "var(--container-max)",
-        margin: "0 auto",
-        padding: "var(--space-xxl) var(--space-xxl) 80px",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--space-xxl)",
-      }}
-      className="hero-section"
-    >
+    <section className="relative max-w-container mx-auto px-lg lg:px-xxl pt-xxl pb-20 overflow-hidden flex flex-col gap-xxl hero-section">
       {/* Gradient blob background */}
       <div
         aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: "50%",
-          right: 0,
-          transform: "translateY(-50%)",
-          width: 700,
-          height: 700,
-          background:
-            "radial-gradient(ellipse at center, rgba(153, 243, 226, 0.35) 0%, rgba(212, 227, 255, 0.25) 60%, transparent 100%)",
-          borderRadius: "50%",
-          filter: "blur(80px)",
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
+        className="absolute top-1/2 right-0 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(ellipse_at_center,_rgba(153,243,226,0.35)_0%,_rgba(212,227,255,0.25)_60%,_transparent_100%)] rounded-full blur-[80px] z-0 pointer-events-none"
       />
 
       {/* Content row */}
-      <div className="hero-content-row" style={{ position: "relative", zIndex: 1 }}>
+      <div className="hero-content-row relative z-10 flex flex-col lg:flex-row items-center gap-xxl">
         {/* Left: copy */}
-        <div className="hero-left">
+        <div className="hero-left flex-1 lg:flex-[1.2]">
           {/* Stat pills */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "var(--space-sm)",
-              marginBottom: "var(--space-sm)",
-            }}
-          >
+          <div className="flex flex-wrap gap-sm mb-sm justify-center lg:justify-start">
             {STAT_PILLS.map((pill) => (
               <StatPill key={pill.label} icon={pill.icon} label={pill.label} />
             ))}
           </div>
 
           {/* Headline */}
-          <h1
-            className="text-h1"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 700,
-              lineHeight: 1.1,
-              letterSpacing: "-0.025em",
-              color: "var(--color-navy)",
-              fontSize: "clamp(40px, 5vw, 64px)",
-              maxWidth: "560px",
-              margin: "0 0 var(--space-lg)",
-            }}
-          >
+          <h1 className="text-h1 font-display font-bold leading-[1.1] tracking-tight text-navy text-[clamp(40px,5vw,64px)] max-w-[560px] mb-lg mx-auto lg:mx-0 text-center lg:text-left">
             Your money,
             <br />
             clearly.
           </h1>
 
           {/* Subtext */}
-          <p
-            className="text-body-lg"
-            style={{
-              color: "var(--color-on-surface-variant)",
-              maxWidth: "460px",
-              margin: "0 0 var(--space-xl)",
-            }}
-          >
+          <p className="text-body-lg text-on-surface-variant max-w-[460px] mb-xl mx-auto lg:mx-0 text-center lg:text-left">
             Experience a sophisticated approach to personal finance. PiggyBank
             uses quiet intelligence to categorize, track, and align your
             spending without the noise.
           </p>
 
           {/* CTAs */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "var(--space-md)",
-              alignItems: "center",
-            }}
-          >
+          <div className="flex flex-wrap gap-md items-center justify-center lg:justify-start">
             <Link
               href="/dashboard"
-              className="btn btn-primary"
-              style={{ textDecoration: "none" }}
+              className="px-8 py-4 bg-charcoal text-white rounded-[10px] font-mono font-semibold no-underline hover:bg-[#3a3737] transition-all"
             >
               Start Tracking →
             </Link>
             <a
               href="#how-it-works"
-              className="btn btn-ghost"
-              style={{ textDecoration: "none" }}
+              className="px-8 py-4 bg-transparent border-[1.5px] border-navy text-navy rounded-[10px] font-mono font-semibold no-underline hover:bg-navy/5 transition-all"
             >
               See how it works
             </a>
@@ -119,7 +52,7 @@ export function Hero() {
         </div>
 
         {/* Right: app mockup visual */}
-        <div className="hero-right" aria-hidden="true">
+        <div className="hero-right flex-1 w-full max-w-[500px] lg:max-w-none" aria-hidden="true">
           <AppMockup />
         </div>
       </div>
@@ -137,28 +70,11 @@ const STAT_PILLS = [
 
 function StatPill({ icon, label }: { icon: string; label: string }) {
   return (
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "var(--space-xs)",
-        padding: "6px var(--space-md)",
-        background: "var(--color-surface-container)",
-        border: "1px solid rgba(199, 197, 207, 0.5)",
-        borderRadius: "var(--radius-full)",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "13px",
-          color: "var(--color-teal)",
-          lineHeight: 1,
-        }}
-      >
+    <div className="inline-flex items-center gap-xs px-md py-1.5 bg-surface-container border border-[rgba(199,197,207,0.5)] rounded-full">
+      <span className="font-mono text-[13px] text-teal leading-none">
         {icon}
       </span>
-      <span className="text-label" style={{ color: "var(--color-body)" }}>
+      <span className="text-label text-body-text">
         {label}
       </span>
     </div>
@@ -169,45 +85,11 @@ function StatPill({ icon, label }: { icon: string; label: string }) {
 
 function AppMockup() {
   return (
-    <div
-      style={{
-        width: "100%",
-        aspectRatio: "4/3",
-        background: "var(--color-surface)",
-        borderRadius: "var(--radius-hero)",
-        boxShadow: "var(--shadow-card)",
-        border: "1px solid rgba(199, 197, 207, 0.2)",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="w-full aspect-4/3 bg-surface rounded-hero shadow-card border border-[rgba(199,197,207,0.2)] overflow-hidden flex flex-col">
       {/* Gradient header area */}
-      <div
-        style={{
-          height: "38%",
-          background: "var(--gradient-hero)",
-          padding: "var(--space-lg)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          gap: "var(--space-sm)",
-        }}
-      >
+      <div className="h-[38%] bg-gradient-hero p-lg flex flex-col justify-end gap-sm">
         {/* Wallet icon circle */}
-        <div
-          style={{
-            width: 52,
-            height: 52,
-            background: "var(--color-surface)",
-            borderRadius: "50%",
-            boxShadow: "var(--shadow-card)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: "var(--space-xs)",
-          }}
-        >
+        <div className="w-[52px] h-[52px] bg-surface rounded-full shadow-card flex items-center justify-center mb-xs">
           <svg
             width="22"
             height="22"
@@ -217,7 +99,7 @@ function AppMockup() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            style={{ color: "var(--color-teal)" }}
+            className="text-teal"
           >
             <path d="M20 12V22H4V12" />
             <path d="M22 7H2v5h20V7z" />
@@ -227,36 +109,14 @@ function AppMockup() {
           </svg>
         </div>
         {/* Balance skeleton lines */}
-        <div
-          style={{
-            width: 120,
-            height: 10,
-            background: "rgba(22, 22, 63, 0.12)",
-            borderRadius: 6,
-          }}
-        />
-        <div
-          style={{
-            width: 160,
-            height: 28,
-            background: "rgba(22, 22, 63, 0.18)",
-            borderRadius: 8,
-          }}
-        />
+        <div className="w-[120px] h-[10px] bg-[rgba(22,22,63,0.12)] rounded-full" />
+        <div className="w-[160px] h-[28px] bg-[rgba(22,22,63,0.18)] rounded-lg" />
       </div>
 
       {/* Expense rows area */}
-      <div
-        style={{
-          flex: 1,
-          padding: "var(--space-md) var(--space-lg)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "var(--space-sm)",
-        }}
-      >
-        {MOCK_ROWS.map((row) => (
-          <MockExpenseRow key={row.color} accentColor={row.color} />
+      <div className="flex-1 p-lg flex flex-col gap-sm">
+        {MOCK_ROWS.map((row, idx) => (
+          <MockExpenseRow key={idx} accentColor={row.color} />
         ))}
       </div>
     </div>
@@ -271,45 +131,13 @@ const MOCK_ROWS = [
 
 function MockExpenseRow({ accentColor }: { accentColor: string }) {
   return (
-    <div
-      style={{
-        width: "100%",
-        height: 44,
-        background: "var(--color-surface)",
-        borderRadius: "var(--radius-card)",
-        boxShadow: "var(--shadow-card)",
-        display: "flex",
-        alignItems: "center",
-        padding: "0 var(--space-md)",
-        gap: "var(--space-sm)",
-      }}
-    >
+    <div className="w-full h-[44px] bg-surface rounded-card shadow-card flex items-center px-md gap-sm">
       <div
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: "50%",
-          background: accentColor,
-          flexShrink: 0,
-        }}
+        className="w-[28px] h-[28px] rounded-full shrink-0"
+        style={{ background: accentColor }}
       />
-      <div
-        style={{
-          flex: 1,
-          height: 10,
-          background: "rgba(119, 118, 127, 0.2)",
-          borderRadius: 6,
-        }}
-      />
-      <div
-        style={{
-          width: 50,
-          height: 10,
-          background: "rgba(22, 22, 63, 0.15)",
-          borderRadius: 6,
-          flexShrink: 0,
-        }}
-      />
+      <div className="flex-1 h-[10px] bg-[rgba(119,118,127,0.2)] rounded-full" />
+      <div className="w-[50px] h-[10px] bg-[rgba(22,22,63,0.15)] rounded-full shrink-0" />
     </div>
   );
 }

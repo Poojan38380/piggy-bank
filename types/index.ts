@@ -44,13 +44,19 @@ export interface ExpenseFilters {
 
 // ── API Response Wrappers ──────────────────────────────────
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  error?: string;
-  /** Only present on idempotent duplicate creates */
-  idempotent?: boolean;
-}
+export type ApiResponse<T> =
+  | {
+      success: true;
+      data: T;
+      error?: never;
+      idempotent?: boolean;
+    }
+  | {
+      success: false;
+      data?: never;
+      error: string;
+      details?: Array<{ field: string; message: string }>;
+    };
 
 export interface ApiErrorResponse {
   success: false;

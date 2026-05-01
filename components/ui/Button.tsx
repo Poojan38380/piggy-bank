@@ -14,9 +14,9 @@ interface ButtonProps
 }
 
 const variantClass: Record<ButtonVariant, string> = {
-  primary:   "bg-charcoal text-white hover:bg-[#3a3737] active:bg-[#1a1818]",
-  ghost:     "bg-transparent border-[1.5px] border-navy text-navy hover:bg-navy/5",
-  teal:      "bg-teal text-white hover:bg-[#155f56]",
+  primary: "bg-charcoal text-white hover:bg-[#3a3737] active:bg-[#1a1818]",
+  ghost: "bg-transparent border-[1.5px] border-navy text-navy hover:bg-navy/5",
+  teal: "bg-teal text-white hover:bg-[#155f56]",
   "teal-soft": "bg-teal-soft text-navy hover:bg-[#aecfc8]",
 };
 
@@ -42,7 +42,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses = "inline-flex items-center justify-center gap-1.5 font-mono font-semibold rounded-[10px] cursor-pointer transition-all no-underline whitespace-nowrap select-none disabled:opacity-55 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2";
-    
+
     const classes = [
       baseClasses,
       variantClass[variant],
@@ -89,7 +89,7 @@ function Spinner() {
   return (
     <svg
       aria-hidden="true"
-      className="animate-spin flex-shrink-0"
+      className="animate-spin shrink-0"
       width="16"
       height="16"
       viewBox="0 0 24 24"

@@ -122,6 +122,30 @@
   --color-panel:      var(--color-bg-panel);
   --color-error:      var(--color-error);
   --color-success:    var(--color-success);
+  --color-divider:    rgba(50, 65, 88, 0.10);
+  --color-outline-variant: var(--color-outline-variant);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-surface-container-low: var(--color-surface-container-low);
+  --color-surface-container-lowest: var(--color-surface-container-lowest);
+
+  /* Map custom spacing to Tailwind utilities (gap-lg, p-xxl, etc.) */
+  --spacing-xs:  var(--space-xs);
+  --spacing-sm:  var(--space-sm);
+  --spacing-md:  var(--space-md);
+  --spacing-lg:  var(--space-lg);
+  --spacing-xl:  var(--space-xl);
+  --spacing-xxl: var(--space-xxl);
+
+  /* Radius mapping */
+  --radius-hero:  var(--radius-hero);
+  --radius-card:  var(--radius-card);
+  --radius-input: var(--radius-input);
+  --radius-sm:    var(--radius-sm);
+
+  /* Shadow mapping */
+  --shadow-card:  var(--shadow-card);
+  --shadow-hover: var(--shadow-hover);
+  --shadow-modal: var(--shadow-modal);
 }
 
 /* ── 4. RESET & BASE ─────────────────────────────────────── */

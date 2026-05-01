@@ -1,6 +1,6 @@
 /**
  * Features — "Designed for clarity" section.
- * Server Component. 3-card grid from Stitch design.
+ * 3-card grid from Stitch design.
  */
 
 interface Feature {
@@ -34,44 +34,21 @@ export function Features() {
   return (
     <section
       id="features"
-      style={{
-        maxWidth: "var(--container-max)",
-        margin: "0 auto var(--space-xl)",
-        padding: "var(--space-xxl)",
-        background: "var(--color-surface)",
-        borderRadius: "var(--radius-hero)",
-        border: "1px solid rgba(199, 197, 207, 0.15)",
-        boxShadow: "var(--shadow-card)",
-      }}
+      className="max-w-container mx-auto mb-xl px-lg lg:px-xxl py-xxl bg-surface rounded-hero border border-[rgba(199,197,207,0.15)] shadow-card"
     >
       {/* Header */}
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "var(--space-xl)",
-        }}
-      >
-        <h2
-          className="text-h2"
-          style={{ marginBottom: "var(--space-sm)" }}
-        >
+      <div className="text-center mb-xl">
+        <h2 className="text-h2 font-display font-bold text-navy mb-sm text-center">
           Designed for clarity
         </h2>
-        <p
-          className="text-body-lg"
-          style={{
-            color: "var(--color-on-surface-variant)",
-            maxWidth: 560,
-            margin: "0 auto",
-          }}
-        >
+        <p className="text-body-lg text-on-surface-variant max-w-[560px] mx-auto text-center">
           Financial tools shouldn't feel like spreadsheets. We built a system
           that feels natural, fast, and remarkably calm.
         </p>
       </div>
 
       {/* 3-column grid */}
-      <div className="features-grid">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
         {FEATURES.map((feature) => (
           <FeatureCard key={feature.title} feature={feature} />
         ))}
@@ -82,37 +59,16 @@ export function Features() {
 
 function FeatureCard({ feature }: { feature: Feature }) {
   return (
-    <div
-      style={{
-        background: "rgba(153, 243, 226, 0.15)",
-        borderRadius: "var(--radius-card)",
-        padding: "var(--space-lg)",
-        border: "1px solid rgba(153, 243, 226, 0.4)",
-        transition: "background-color 0.15s ease",
-      }}
-      className="feature-card"
-    >
+    <div className="bg-[rgba(153,243,226,0.15)] rounded-card p-lg border border-[rgba(153,243,226,0.4)] transition-all hover:bg-[rgba(153,243,226,0.20)]">
       {/* Icon */}
-      <div
-        style={{
-          width: 48,
-          height: 48,
-          background: "var(--color-surface)",
-          borderRadius: "var(--radius-input)",
-          boxShadow: "var(--shadow-card)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: "var(--space-md)",
-        }}
-      >
+      <div className="w-[48px] h-[48px] bg-surface rounded-input shadow-card flex items-center justify-center mb-md">
         {feature.icon}
       </div>
 
-      <h3 className="text-h3" style={{ marginBottom: "var(--space-sm)" }}>
+      <h3 className="text-h3 font-display font-semibold text-navy mb-sm">
         {feature.title}
       </h3>
-      <p className="text-body-md" style={{ color: "var(--color-on-surface-variant)" }}>
+      <p className="text-body-md text-on-surface-variant">
         {feature.description}
       </p>
     </div>
@@ -129,7 +85,7 @@ function BoltIcon() {
       height="22"
       viewBox="0 0 24 24"
       fill="currentColor"
-      style={{ color: "var(--color-teal)" }}
+      className="text-teal"
     >
       <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
     </svg>
@@ -148,7 +104,7 @@ function InsightsIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ color: "var(--color-teal)" }}
+      className="text-teal"
     >
       <line x1="18" y1="20" x2="18" y2="10" />
       <line x1="12" y1="20" x2="12" y2="4" />
@@ -169,7 +125,7 @@ function ShieldIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ color: "var(--color-teal)" }}
+      className="text-teal"
     >
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       <polyline points="9 12 11 14 15 10" />

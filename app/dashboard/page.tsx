@@ -37,7 +37,7 @@ function DashboardContent() {
             activeCategory={filters.category}
           />
 
-          <div className="card p-lg bg-surface shadow-card">
+          <div className="card p-lg">
             <ExpenseForm onSuccess={refetch} />
           </div>
         </div>

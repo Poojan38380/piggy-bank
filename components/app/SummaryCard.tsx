@@ -22,7 +22,7 @@ export function SummaryCard({
   if (isLoading) return <SummaryCardSkeleton />;
 
   return (
-    <div className="card-hero p-lg border-l-4 border-teal flex flex-col gap-1">
+    <div className="card-hero p-lg border-l-4 border-teal flex flex-col gap-xs">
       <p className="text-label text-navy opacity-70">
         {activeCategory ? `Spending in ${activeCategory}` : "Total Spending"}
       </p>

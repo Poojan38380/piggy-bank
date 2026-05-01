@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createExpenseSchema } from "@/lib/validations";
 import { toPaise, formatCurrency } from "@/lib/money";
-import { Expense } from "@/types";
+import { Expense, ApiResponse, ExpenseListResponse } from "@/types";
+import { Prisma } from "@prisma/client";
 
 /**
  * GET /api/expenses
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
   const sort = searchParams.get("sort") || "desc";
 
   try {
-    const where = category && category !== "all" ? { category } : {};
+    const where: Prisma.ExpenseWhereInput = category && category !== "all" ? { category } : {};
     
     const dbExpenses = await prisma.expense.findMany({
       where,
@@ -22,7 +23,7 @@ export async function GET(request: Request) {
     });
 
     // 1. Transform DB models to UI Types (adding formatted strings)
-    const items: Expense[] = dbExpenses.map((e: any) => ({
+    const items: Expense[] = dbExpenses.map((e) => ({
       id: e.id,
       amount: e.amount,
       amountFormatted: formatCurrency(e.amount),
@@ -36,18 +37,26 @@ export async function GET(request: Request) {
     // 2. Compute Meta
     const totalPaise = items.reduce((sum, item) => sum + item.amount, 0);
 
-    return NextResponse.json({
+    const data: ExpenseListResponse = {
       items,
       meta: {
         total: items.length,
         visibleTotal: totalPaise,
         visibleTotalFormatted: formatCurrency(totalPaise),
-        filteredBy: category === "all" ? null : category,
+        filteredBy: !category || category === "all" ? null : category,
       },
-    });
+    };
+
+    return NextResponse.json({
+      success: true,
+      data
+    } as ApiResponse<ExpenseListResponse>);
   } catch (error) {
     console.error("API_EXPENSES_GET_ERROR", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      success: false, 
+      error: "Internal Server Error" 
+    } as ApiResponse<never>, { status: 500 });
   }
 }
 
@@ -62,7 +71,11 @@ export async function POST(request: Request) {
     // 1. Validation
     const result = createExpenseSchema.safeParse(body);
     if (!result.success) {
-      return NextResponse.json({ error: result.error.format() }, { status: 400 });
+      return NextResponse.json({ 
+        success: false, 
+        error: "Validation failed",
+        details: result.error.issues.map(e => ({ field: String(e.path[0]), message: e.message }))
+      } as ApiResponse<never>, { status: 400 });
     }
 
     const { amount, category, description, date, idempotencyKey } = result.data;
@@ -74,7 +87,7 @@ export async function POST(request: Request) {
 
     if (existing) {
       // Record already exists, return it to fulfill idempotency
-      return NextResponse.json({
+      const expense: Expense = {
         id: existing.id,
         amount: existing.amount,
         amountFormatted: formatCurrency(existing.amount),
@@ -83,13 +96,22 @@ export async function POST(request: Request) {
         date: existing.date.toISOString().split("T")[0],
         createdAt: existing.createdAt.toISOString(),
         idempotencyKey: existing.idempotencyKey,
-      });
+      };
+
+      return NextResponse.json({
+        success: true,
+        data: expense,
+        idempotent: true
+      } as ApiResponse<Expense>);
     }
 
     // 3. Create new record
     const paise = toPaise(amount);
     if (paise === null) {
-      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+      return NextResponse.json({ 
+        success: false, 
+        error: "Invalid amount" 
+      } as ApiResponse<never>, { status: 400 });
     }
 
     const created = await prisma.expense.create({
@@ -102,7 +124,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({
+    const expense: Expense = {
       id: created.id,
       amount: created.amount,
       amountFormatted: formatCurrency(created.amount),
@@ -111,10 +133,18 @@ export async function POST(request: Request) {
       date: created.date.toISOString().split("T")[0],
       createdAt: created.createdAt.toISOString(),
       idempotencyKey: created.idempotencyKey,
-    }, { status: 201 });
+    };
+
+    return NextResponse.json({
+      success: true,
+      data: expense
+    } as ApiResponse<Expense>, { status: 201 });
 
   } catch (error) {
     console.error("API_EXPENSES_POST_ERROR", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      success: false, 
+      error: "Internal Server Error" 
+    } as ApiResponse<never>, { status: 500 });
   }
 }

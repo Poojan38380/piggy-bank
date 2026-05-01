@@ -34,11 +34,11 @@ const ibmPlexMono = IBM_Plex_Mono({
    ──────────────────────────────────────────────────────── */
 export const metadata: Metadata = {
   title: {
-    default: "PiggyBank — Your money, clearly.",
+    default: "PiggyBank — The Quiet Luxury Expense Tracker",
     template: "%s | PiggyBank",
   },
   description:
-    "Track every rupee with precision. Filter, sort, and understand your spending — no dashboards, just numbers. Built with Fenmo AI.",
+    "Track every rupee with precision. PiggyBank by Fenmo is a quiet luxury finance tracker that helps you filter, sort, and understand your spending without the clutter.",
   keywords: [
     "expense tracker",
     "personal finance",
@@ -50,6 +50,19 @@ export const metadata: Metadata = {
   authors: [{ name: "Fenmo AI", url: "https://fenmo.ai" }],
   creator: "Fenmo AI",
   metadataBase: new URL("https://piggybank.fenmo.ai"),
+  alternates: {
+    canonical: "/",
+  },
+  icons: {
+    icon: [
+      { url: "/icon0.svg", type: "image/svg+xml" },
+      { url: "/icon1.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  manifest: "/manifest.json",
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -57,17 +70,33 @@ export const metadata: Metadata = {
     siteName: "PiggyBank by Fenmo",
     title: "PiggyBank — Your money, clearly.",
     description:
-      "Track every rupee with precision. Filter, sort, and understand your spending — no dashboards, just numbers.",
+      "The quiet luxury expense tracker. Track every rupee with precision. Filter, sort, and understand your spending without the clutter.",
+    images: [
+      {
+        url: "/logos/logo.png",
+        width: 512,
+        height: 512,
+        alt: "PiggyBank Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "PiggyBank — Your money, clearly.",
-    description: "Track every rupee with precision. Built with Fenmo AI.",
+    description: "The quiet luxury expense tracker. Built with Fenmo AI.",
     creator: "@fenmoai",
+    images: ["/logos/logo.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

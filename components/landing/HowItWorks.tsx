@@ -1,6 +1,5 @@
 /**
  * HowItWorks — 3-step flow with connecting line.
- * Server Component. From Stitch landing-page.html "The simplest flow" section.
  */
 
 const STEPS = [
@@ -25,47 +24,24 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      style={{
-        maxWidth: "var(--container-max)",
-        margin: "0 auto",
-        padding: "var(--space-xxl)",
-      }}
+      className="max-w-container mx-auto px-lg lg:px-xxl py-xxl"
     >
-      <h2
-        className="text-h2"
-        style={{
-          textAlign: "center",
-          marginBottom: "var(--space-xl)",
-        }}
-      >
+      <h2 className="text-h2 font-display font-bold text-navy text-center mb-xl">
         The simplest flow
       </h2>
 
       {/* Steps row with connecting line */}
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          gap: "var(--space-xl)",
-          maxWidth: 800,
-          margin: "0 auto",
-        }}
-        className="steps-container"
-      >
+      <div className="relative flex flex-col md:flex-row gap-xl max-w-[800px] mx-auto steps-container">
         {/* Connecting line — desktop horizontal, mobile vertical */}
         <div
           aria-hidden="true"
-          className="steps-connector"
-          style={{
-            position: "absolute",
-            top: 32,
-            left: "10%",
-            right: "10%",
-            height: 1,
-            background: "rgba(199, 197, 207, 0.4)",
-            zIndex: 0,
-          }}
+          className="absolute hidden md:block top-8 left-[10%] right-[10%] h-px bg-[rgba(199,197,207,0.4)] z-0"
+        />
+
+        {/* Mobile vertical line */}
+        <div
+          aria-hidden="true"
+          className="absolute block md:hidden top-8 bottom-8 left-8 w-[1px] bg-[rgba(199,197,207,0.4)] z-0"
         />
 
         {STEPS.map((step) => (
@@ -82,61 +58,20 @@ function Step({
   step: (typeof STEPS)[number];
 }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: "var(--space-md)",
-        position: "relative",
-        background: "var(--color-bg)",
-      }}
-      className="step-item"
-    >
+    <div className="flex flex-row items-center gap-md relative bg-background step-item">
       {/* Number circle */}
-      <div
-        style={{
-          width: 64,
-          height: 64,
-          background: "var(--color-surface-container-highest)",
-          borderRadius: "50%",
-          border: "1px solid var(--color-surface-dim)",
-          boxShadow: "var(--shadow-card)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          zIndex: 1,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "16px",
-            fontWeight: 600,
-            letterSpacing: "0.02em",
-            color: "var(--color-teal)",
-          }}
-        >
+      <div className="w-[64px] h-[64px] bg-surface-container-highest rounded-full border border-surface-dim shadow-card flex items-center justify-center shrink-0 z-10">
+        <span className="font-mono text-[16px] font-semibold tracking-tight text-teal">
           {step.number}
         </span>
       </div>
 
       {/* Text */}
       <div>
-        <h4
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "16px",
-            fontWeight: 600,
-            letterSpacing: "0.02em",
-            color: "var(--color-navy)",
-            marginBottom: 4,
-          }}
-        >
+        <h4 className="font-mono text-[16px] font-semibold tracking-tight text-navy mb-1">
           {step.title}
         </h4>
-        <p className="text-body-sm" style={{ color: "var(--color-on-surface-variant)" }}>
+        <p className="text-body-sm text-on-surface-variant">
           {step.description}
         </p>
       </div>
