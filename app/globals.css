@@ -7,7 +7,6 @@
    ============================================================ */
 
 /* ── 1. DESIGN TOKENS (:root) ────────────────────────────── */
-/* Fonts are loaded via next/font/google in app/layout.tsx   */
 :root {
   /* --- Font Families --- */
   --font-display: 'Work Sans', sans-serif;

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>piggybank. Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Work+Sans:wght@700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#16163f",
+                        "on-primary-fixed-variant": "#42436e",
+                        "on-tertiary-fixed-variant": "#494646",
+                        "surface-dim": "#cbdbf8",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#47464e",
+                        "tertiary-container": "#1d1b1b",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f0f3ff",
+                        "tertiary": "#000000",
+                        "primary-fixed-dim": "#c3c2f5",
+                        "surface-bright": "#f9f9ff",
+                        "surface-tint": "#5a5a87",
+                        "on-surface": "#0c1c31",
+                        "on-secondary-container": "#007164",
+                        "surface-container-high": "#dee9ff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#00201b",
+                        "outline-variant": "#c8c5cf",
+                        "secondary-fixed": "#99f3e2",
+                        "secondary-container": "#99f3e2",
+                        "surface": "#f9f9ff",
+                        "inverse-primary": "#c3c2f5",
+                        "inverse-surface": "#223147",
+                        "secondary-fixed-dim": "#7dd6c6",
+                        "primary": "#000000",
+                        "tertiary-fixed-dim": "#cac5c5",
+                        "on-error": "#ffffff",
+                        "on-background": "#0c1c31",
+                        "tertiary-fixed": "#e7e1e1",
+                        "surface-container-highest": "#d4e3ff",
+                        "on-secondary-fixed-variant": "#005046",
+                        "primary-container": "#16163f",
+                        "error-container": "#ffdad6",
+                        "background": "#f9f9ff",
+                        "on-primary-container": "#807faf",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#d4e3ff",
+                        "outline": "#77767f",
+                        "surface-container": "#e7eeff",
+                        "on-tertiary-container": "#878383",
+                        "primary-fixed": "#e2dfff",
+                        "secondary": "#006b5e",
+                        "inverse-on-surface": "#ebf1ff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#1d1b1b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "container-margin": "48px",
+                        "xxl": "48px",
+                        "md": "16px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "data-display": ["Inter"],
+                        "h3": ["Work Sans"],
+                        "h1": ["Work Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "data-display": ["16px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "h3": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "h1": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "h2": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-shadow {
+            box-shadow: 0 2px 8px rgba(22, 22, 63, 0.06);
+        }
+
+        .deep-shadow {
+            box-shadow: 0 8px 24px rgba(22, 22, 63, 0.08);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row antialiased">
+    <!-- Mobile Top App Bar (Hidden on md and up) -->
+    <header
+        class="md:hidden flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto bg-surface-container-lowest border-b border-outline-variant/20 shadow-[0_2px_8px_rgba(22,22,63,0.06)] z-40 sticky top-0">
+        <div class="text-2xl font-black text-primary-container lowercase flex items-center gap-2">piggybank.</div>
+        <div class="flex items-center gap-4">
+            <button
+                class="text-on-surface-variant hover:bg-surface-dim/20 p-2 rounded-full transition-colors scale-95 active:duration-150">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <button
+                class="text-on-surface-variant hover:bg-surface-dim/20 p-2 rounded-full transition-colors scale-95 active:duration-150">
+                <span class="material-symbols-outlined">account_circle</span>
+            </button>
+        </div>
+    </header>
+    <!-- Left Panel (40% on Desktop) -->
+    <aside
+        class="w-full md:w-[40%] bg-[#FAFAF9] flex flex-col h-full md:h-screen md:sticky md:top-0 border-r border-outline-variant/10 p-container-margin overflow-y-auto">
+        <!-- Logo (Desktop Only) -->
+        <div class="hidden md:flex items-center mb-xl">
+            <h1 class="font-h1 text-h1 text-primary-container lowercase">piggybank.</h1>
+        </div>
+        <!-- Summary Card -->
+        <div
+            class="bg-surface-container-lowest rounded-[20px] custom-shadow p-lg mb-xl border-l-4 border-secondary relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-xs">Total
+                    Balance</p>
+                <h2 class="font-h2 text-h2 text-primary-container">₹12,450.00</h2>
+            </div>
+            <!-- Decorative background element -->
+            <div
+                class="absolute right-0 top-0 w-32 h-32 bg-secondary-container rounded-full blur-3xl opacity-20 -mr-16 -mt-16 group-hover:opacity-30 transition-opacity">
+            </div>
+        </div>
+        <!-- Add Expense Form -->
+        <div class="flex flex-col gap-lg bg-surface-container-lowest p-lg rounded-[20px] custom-shadow">
+            <h3 class="font-h3 text-h3 text-primary-container border-b border-outline-variant/10 pb-md">Add Expense</h3>
+            <div class="flex flex-col gap-sm">
+                <label class="font-label-caps text-label-caps text-on-surface-variant">Amount</label>
+                <div class="relative flex items-center">
+                    <span class="absolute left-4 font-h3 text-h3 text-on-surface-variant">₹</span>
+                    <input
+                        class="w-full pl-12 pr-4 py-3 bg-surface border border-outline-variant/20 rounded-[10px] font-h3 text-h3 text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors"
+                        placeholder="0.00" type="text" />
+                </div>
+            </div>
+            <div class="flex flex-col gap-sm">
+                <label class="font-label-caps text-label-caps text-on-surface-variant">Category</label>
+                <div class="flex flex-wrap gap-2">
+                    <button
+                        class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full font-body-sm text-body-sm transition-colors border border-transparent">Food</button>
+                    <button
+                        class="px-4 py-2 bg-surface text-on-surface-variant border border-outline-variant/20 rounded-full font-body-sm text-body-sm hover:border-secondary hover:text-secondary transition-colors">Transport</button>
+                    <button
+                        class="px-4 py-2 bg-surface text-on-surface-variant border border-outline-variant/20 rounded-full font-body-sm text-body-sm hover:border-secondary hover:text-secondary transition-colors">Utilities</button>
+                    <button
+                        class="px-4 py-2 bg-surface text-on-surface-variant border border-outline-variant/20 rounded-full font-body-sm text-body-sm hover:border-secondary hover:text-secondary transition-colors">Entertainment</button>
+                    <button
+                        class="px-4 py-2 bg-surface text-on-surface-variant border border-outline-variant/20 rounded-full font-body-sm text-body-sm hover:border-secondary hover:text-secondary transition-colors">Shopping</button>
+                    <button
+                        class="px-4 py-2 bg-surface text-on-surface-variant border border-outline-variant/20 rounded-full font-body-sm text-body-sm hover:border-secondary hover:text-secondary transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">add</span> Custom
+                    </button>
+                </div>
+            </div>
+            <div class="flex flex-col gap-sm">
+                <label class="font-label-caps text-label-caps text-on-surface-variant">Date</label>
+                <div class="relative flex items-center">
+                    <span
+                        class="absolute left-4 material-symbols-outlined text-on-surface-variant">calendar_today</span>
+                    <input
+                        class="w-full pl-12 pr-4 py-3 bg-surface border border-outline-variant/20 rounded-[10px] font-body-md text-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors"
+                        type="date" />
+                </div>
+            </div>
+            <div class="flex flex-col gap-sm">
+                <label class="font-label-caps text-label-caps text-on-surface-variant">Note</label>
+                <input
+                    class="w-full px-4 py-3 bg-surface border border-outline-variant/20 rounded-[10px] font-body-md text-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors"
+                    placeholder="What was this for?" type="text" />
+            </div>
+            <button
+                class="mt-md w-full py-4 bg-[#282626] text-white rounded-[10px] font-data-display text-data-display flex items-center justify-center gap-2 hover:bg-black transition-colors">
+                Add Expense <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+            </button>
+        </div>
+    </aside>
+    <!-- Right Panel (60% on Desktop) -->
+    <main class="w-full md:w-[60%] bg-[#F5F5F3] flex flex-col h-full min-h-screen pb-24 md:pb-0">
+        <!-- Sticky Sub-header -->
+        <div
+            class="sticky top-0 md:top-0 z-30 bg-[#F5F5F3]/90 backdrop-blur-md border-b border-outline-variant/10 px-container-margin py-lg flex justify-between items-center">
+            <h2 class="font-h2 text-h2 text-primary-container">Recent Expenses</h2>
+            <div class="flex items-center gap-4">
+                <div class="relative group cursor-pointer">
+                    <div
+                        class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest rounded-[10px] border border-outline-variant/20 text-on-surface-variant font-body-sm text-body-sm hover:border-secondary transition-colors">
+                        All Categories <span class="material-symbols-outlined text-[18px]">expand_more</span>
+                    </div>
+                </div>
+                <button
+                    class="p-2 bg-surface-container-lowest rounded-[10px] border border-outline-variant/20 text-on-surface-variant hover:text-secondary hover:border-secondary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[20px]">sort</span>
+                </button>
+            </div>
+        </div>
+        <!-- Expense List -->
+        <div class="p-container-margin flex flex-col gap-md">
+            <!-- Expense Item 1 -->
+            <div
+                class="group flex items-center justify-between p-lg bg-surface-container-lowest rounded-[20px] custom-shadow border-l-4 border-transparent hover:border-secondary hover:-translate-y-1 transition-all duration-200 cursor-pointer">
+                <div class="flex items-center gap-lg">
+                    <div
+                        class="w-12 h-12 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
+                        <span class="material-symbols-outlined">restaurant</span>
+                    </div>
+                    <div>
+                        <p class="font-data-display text-data-display text-primary-container mb-xs">Dinner at The Ivy
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="px-2 py-0.5 bg-surface-container rounded-sm font-label-caps text-label-caps text-on-surface-variant text-[10px]">Food</span>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant/70 text-[12px]">Today, 8:30
+                                PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-data-display text-data-display text-primary-container">₹4,250.00</p>
+                </div>
+            </div>
+            <!-- Expense Item 2 -->
+            <div
+                class="group flex items-center justify-between p-lg bg-surface-container-lowest rounded-[20px] custom-shadow border-l-4 border-transparent hover:border-secondary hover:-translate-y-1 transition-all duration-200 cursor-pointer">
+                <div class="flex items-center gap-lg">
+                    <div
+                        class="w-12 h-12 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center">
+                        <span class="material-symbols-outlined">local_taxi</span>
+                    </div>
+                    <div>
+                        <p class="font-data-display text-data-display text-primary-container mb-xs">Uber to Airport</p>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="px-2 py-0.5 bg-surface-container rounded-sm font-label-caps text-label-caps text-on-surface-variant text-[10px]">Transport</span>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant/70 text-[12px]">Yesterday,
+                                10:15 AM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-data-display text-data-display text-primary-container">₹1,800.00</p>
+                </div>
+            </div>
+            <!-- Expense Item 3 -->
+            <div
+                class="group flex items-center justify-between p-lg bg-surface-container-lowest rounded-[20px] custom-shadow border-l-4 border-transparent hover:border-secondary hover:-translate-y-1 transition-all duration-200 cursor-pointer">
+                <div class="flex items-center gap-lg">
+                    <div
+                        class="w-12 h-12 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center">
+                        <span class="material-symbols-outlined">bolt</span>
+                    </div>
+                    <div>
+                        <p class="font-data-display text-data-display text-primary-container mb-xs">Electricity Bill</p>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="px-2 py-0.5 bg-surface-container rounded-sm font-label-caps text-label-caps text-on-surface-variant text-[10px]">Utilities</span>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant/70 text-[12px]">Oct 12,
+                                2023</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-data-display text-data-display text-primary-container">₹3,150.00</p>
+                </div>
+            </div>
+            <!-- Expense Item 4 -->
+            <div
+                class="group flex items-center justify-between p-lg bg-surface-container-lowest rounded-[20px] custom-shadow border-l-4 border-transparent hover:border-secondary hover:-translate-y-1 transition-all duration-200 cursor-pointer">
+                <div class="flex items-center gap-lg">
+                    <div
+                        class="w-12 h-12 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                    </div>
+                    <div>
+                        <p class="font-data-display text-data-display text-primary-container mb-xs">Groceries</p>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="px-2 py-0.5 bg-surface-container rounded-sm font-label-caps text-label-caps text-on-surface-variant text-[10px]">Shopping</span>
+                            <span class="font-body-sm text-body-sm text-on-surface-variant/70 text-[12px]">Oct 10,
+                                2023</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-data-display text-data-display text-primary-container">₹3,250.00</p>
+                </div>
+            </div>
+            <!-- Date Divider -->
+            <div class="flex items-center gap-4 my-md">
+                <div class="flex-grow h-px bg-outline-variant/20"></div>
+                <span class="font-label-caps text-label-caps text-on-surface-variant/60">Earlier this month</span>
+                <div class="flex-grow h-px bg-outline-variant/20"></div>
+            </div>
+            <!-- Empty State (Hidden, but structured as requested) -->
+            <div class="hidden flex-col items-center justify-center py-xxl opacity-50">
+                <span class="material-symbols-outlined text-[64px] text-on-surface-variant mb-md font-light"
+                    style="font-variation-settings: 'FILL' 0, 'wght' 100;">savings</span>
+                <p class="font-body-lg text-body-lg text-on-surface-variant text-center max-w-sm">No expenses yet. Add
+                    your first expense to get started.</p>
+            </div>
+        </div>
+    </main>
+    <!-- Mobile Bottom Nav Bar (Hidden on md and up) -->
+    <nav
+        class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 backdrop-blur-md border-t border-outline-variant/10 shadow-[0_-4px_12px_rgba(22,22,63,0.04)] rounded-t-[20px]">
+        <div
+            class="flex flex-col items-center justify-center bg-secondary-container/40 text-primary-container rounded-[10px] px-4 py-1 hover:opacity-80 transition-opacity Active: transform scale-90 duration-200 cursor-pointer">
+            <span class="material-symbols-outlined text-[24px] mb-1"
+                style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+            <span class="font-label-caps text-label-caps text-[10px] uppercase tracking-widest">Expenses</span>
+        </div>
+        <div
+            class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-1 hover:opacity-80 transition-opacity cursor-pointer">
+            <span class="material-symbols-outlined text-[24px] mb-1">query_stats</span>
+            <span class="font-label-caps text-label-caps text-[10px] uppercase tracking-widest">Insights</span>
+        </div>
+        <div
+            class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-1 hover:opacity-80 transition-opacity cursor-pointer">
+            <span class="material-symbols-outlined text-[24px] mb-1">center_focus_strong</span>
+            <span class="font-label-caps text-label-caps text-[10px] uppercase tracking-widest">Scan</span>
+        </div>
+        <div
+            class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-1 hover:opacity-80 transition-opacity cursor-pointer">
+            <span class="material-symbols-outlined text-[24px] mb-1">settings</span>
+            <span class="font-label-caps text-label-caps text-[10px] uppercase tracking-widest">Settings</span>
+        </div>
+    </nav>
+</body>
+
+</html>
