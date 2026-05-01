@@ -41,7 +41,7 @@ export function HowItWorks() {
         {/* Mobile vertical line */}
         <div
           aria-hidden="true"
-          className="absolute block md:hidden top-8 bottom-8 left-8 w-[1px] bg-[rgba(199,197,207,0.4)] z-0"
+          className="absolute block md:hidden top-8 bottom-8 left-8 w-px bg-[rgba(199,197,207,0.4)] z-0"
         />
 
         {STEPS.map((step) => (

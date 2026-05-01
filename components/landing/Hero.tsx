@@ -6,7 +6,7 @@ export function Hero() {
       {/* Gradient blob background */}
       <div
         aria-hidden="true"
-        className="absolute top-1/2 right-0 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(ellipse_at_center,_rgba(153,243,226,0.35)_0%,_rgba(212,227,255,0.25)_60%,_transparent_100%)] rounded-full blur-[80px] z-0 pointer-events-none"
+        className="absolute top-1/2 right-0 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(ellipse_at_center,rgba(153,243,226,0.35)_0%,rgba(212,227,255,0.25)_60%,transparent_100%)] rounded-full blur-[80px] z-0 pointer-events-none"
       />
 
       {/* Content row */}

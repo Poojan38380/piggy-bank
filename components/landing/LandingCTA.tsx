@@ -12,7 +12,7 @@ export function LandingCTA() {
         {/* Decorative blob */}
         <div
           aria-hidden="true"
-          className="absolute -top-[60px] -right-[60px] w-[240px] h-[240px] bg-[rgba(22,22,63,0.06)] rounded-full blur-[40px]"
+          className="absolute top-[-60px] right-[-60px] w-[240px] h-[240px] bg-[rgba(22,22,63,0.06)] rounded-full blur-2xl"
         />
 
         <h2 className="text-h2 font-display font-bold text-navy relative z-10 text-center">
