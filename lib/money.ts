@@ -21,13 +21,10 @@ const INR_FORMATTER = new Intl.NumberFormat("en-IN", {
  * Returns null if the input is invalid.
  *
  * @example
- * parseAmountToPaise("149.99") // → 14999
- * parseAmountToPaise("100")    // → 10000
- * parseAmountToPaise("0.1")    // → 10
- * parseAmountToPaise("-1")     // → null (negative)
- * parseAmountToPaise("abc")    // → null (not a number)
+ * toPaise("149.99") // → 14999
+ * toPaise("100")    // → 10000
  */
-export function parseAmountToPaise(input: string): number | null {
+export function toPaise(input: string): number | null {
   if (!input || typeof input !== "string") return null;
 
   const trimmed = input.trim();
@@ -92,7 +89,7 @@ export function sumPaise(items: number[]): number {
  * with at most 2 decimal places.
  */
 export function isValidAmount(input: string): boolean {
-  return parseAmountToPaise(input) !== null;
+  return toPaise(input) !== null;
 }
 
 /**
