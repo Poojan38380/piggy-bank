@@ -2,26 +2,42 @@
 
 import { ExpenseFormValues } from "@/lib/validations";
 import { Expense, ApiResponse } from "@/types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * useCreateExpense — Manages the lifecycle of expense creation.
- * 
+ *
  * Features:
- * - Robust Idempotency: Generates a UUID using lazy state initialization.
+ * - Robust Idempotency: Generates a UUID lazily, with a safe SSR fallback.
  * - Resilience: UUID is preserved on failure to allow safe retries.
  * - State: Regenerates key only after a successful creation.
+ *
+ * BUG-9 FIX: The original SSR fallback was an empty string "".
+ * An empty string would fail UUID validation on the server with a confusing error.
+ * Fix: useRef ensures the key is generated exactly once on mount.
+ * On SSR, a temporary placeholder is used and replaced immediately on hydration.
  */
 export function useCreateExpense() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 1. Initialize idempotency key lazily to ensure it exists before first render/interaction
-  const [idempotencyKey, setIdempotencyKey] = useState<string>(() => {
-    if (typeof window !== "undefined") return crypto.randomUUID();
-    return ""; // Placeholder for SSR
-  });
+  // Initialize with a placeholder; the ref ensures we generate once on client mount.
+  const hasInitialized = useRef(false);
+  const [idempotencyKey, setIdempotencyKey] = useState<string>("");
+
+  useEffect(() => {
+    // This runs only on the client, after hydration. Generates the first key.
+    if (!hasInitialized.current) {
+      setIdempotencyKey(crypto.randomUUID());
+      hasInitialized.current = true;
+    }
+  }, []);
 
   const create = async (values: ExpenseFormValues): Promise<Expense> => {
+    // Guard: ensure a valid key exists before submitting
+    if (!idempotencyKey) {
+      throw new Error("Not ready — idempotency key not yet initialized.");
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -40,7 +56,7 @@ export function useCreateExpense() {
         throw new Error(resData.error || "Failed to create expense");
       }
 
-      // 2. Success! Generate a NEW key for the next potential expense
+      // Success! Generate a NEW key for the next potential expense.
       setIdempotencyKey(crypto.randomUUID());
 
       return resData.data;

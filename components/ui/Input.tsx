@@ -1,7 +1,6 @@
-
 "use client"
 
-import { forwardRef, useRef } from "react";
+import { forwardRef, useId as useReactId } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -11,15 +10,6 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isAmount?: boolean;
   /** ID is required for label association; auto-generated if not provided */
   id?: string;
-}
-
-let _idCounter = 0;
-function useId(provided?: string): string {
-  const ref = useRef<string | null>(null);
-  if (!ref.current) {
-    ref.current = provided ?? `input-${++_idCounter}`;
-  }
-  return ref.current;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -35,7 +25,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    const id = useId(providedId);
+    // BUG-6 FIX: Use React.useId() instead of a custom module-level counter.
+    // React.useId() is SSR-safe and avoids server/client hydration mismatches.
+    const generatedId = useReactId();
+    const id = providedId ?? generatedId;
     const errorId = `${id}-error`;
     const helperId = `${id}-helper`;
 
@@ -122,7 +115,9 @@ interface TextareaProps
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, helper, id: providedId, className = "", ...props }, ref) => {
-    const id = useId(providedId);
+    // BUG-6 FIX: Use React.useId() for SSR-safe ID generation
+    const generatedId = useReactId();
+    const id = providedId ?? generatedId;
     const errorId = `${id}-error`;
 
     const baseInputClass = "w-full font-sans text-[16px] font-normal text-on-surface bg-surface border-[1px] border-[rgba(50,65,88,0.20)] rounded-[10px] px-4 py-3 outline-none transition-all placeholder:text-outline placeholder:font-normal focus:border-teal focus:ring-3 focus:ring-teal/10";

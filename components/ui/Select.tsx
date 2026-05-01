@@ -1,5 +1,5 @@
 "use client"
-import { forwardRef, useRef } from "react";
+import { forwardRef, useId as useReactId } from "react";
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -9,15 +9,6 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: Array<{ value: string; label: string }>;
   /** Placeholder option shown when value is empty */
   placeholder?: string;
-}
-
-let _idCounter = 0;
-function useId(provided?: string): string {
-  const ref = useRef<string | null>(null);
-  if (!ref.current) {
-    ref.current = provided ?? `select-${++_idCounter}`;
-  }
-  return ref.current;
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -34,7 +25,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     },
     ref
   ) => {
-    const id = useId(providedId);
+    // BUG-6 FIX: Use React.useId() instead of custom module-level counter.
+    // React.useId() is SSR-safe and avoids server/client hydration mismatches.
+    const generatedId = useReactId();
+    const id = providedId ?? generatedId;
     const errorId = `${id}-error`;
 
     const baseInputClass = "w-full font-sans text-[16px] font-normal text-on-surface bg-surface border-[1px] border-[rgba(50,65,88,0.20)] rounded-[10px] px-4 py-3 outline-none transition-all cursor-pointer appearance-none pr-10 focus:border-teal focus:ring-3 focus:ring-teal/10";

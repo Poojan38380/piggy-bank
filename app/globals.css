@@ -81,8 +81,8 @@
   /* --- Category Badge Colors --- */
   --badge-food-bg:          #FEF3C7;
   --badge-food-text:        #92400E;
-  --badge-travel-bg:        #DBEAFE;
-  --badge-travel-text:      #1E40AF;
+  --badge-transport-bg:     #DBEAFE; /* BUG-7 FIX: was --badge-travel-* */
+  --badge-transport-text:   #1E40AF;
   --badge-bills-bg:         #FCE7F3;
   --badge-bills-text:       #9D174D;
   --badge-shopping-bg:      #EDE9FE;
@@ -253,7 +253,7 @@ body {
 }
 
 .text-amount-hero {
-  font-family: var(--font-display) !important;
+  font-family: var(--font-mono) !important; /* BUG-1 FIX: MUST be IBM Plex Mono per DESIGN.md Rule #5 */
   font-size: 48px;
   font-weight: 700;
   line-height: 1;
@@ -428,7 +428,7 @@ body {
 }
 
 .badge-food         { background: var(--badge-food-bg);          color: var(--badge-food-text); }
-.badge-travel       { background: var(--badge-travel-bg);        color: var(--badge-travel-text); }
+.badge-transport    { background: var(--badge-transport-bg);      color: var(--badge-transport-text); } /* BUG-7 FIX: was .badge-travel */
 .badge-bills        { background: var(--badge-bills-bg);         color: var(--badge-bills-text); }
 .badge-shopping     { background: var(--badge-shopping-bg);      color: var(--badge-shopping-text); }
 .badge-health       { background: var(--badge-health-bg);        color: var(--badge-health-text); }

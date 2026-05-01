@@ -180,7 +180,7 @@ on-background:            #0c1c31
 | Category | Background | Text |
 |----------|-----------|------|
 | Food | `#FEF3C7` | `#92400E` |
-| Travel | `#DBEAFE` | `#1E40AF` |
+| Transport | `#DBEAFE` | `#1E40AF` |
 | Bills | `#FCE7F3` | `#9D174D` |
 | Shopping | `#EDE9FE` | `#5B21B6` |
 | Health | `#D1FAE5` | `#065F46` |

@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
 import { useExpenses } from "@/hooks/useExpenses";
 import { AppHeader } from "@/components/app/AppHeader";
 import { SummaryCard } from "@/components/app/SummaryCard";
@@ -9,9 +8,14 @@ import { ExpenseFilters } from "@/components/app/ExpenseFilters";
 import { ExpenseList } from "@/components/app/ExpenseList";
 
 /**
- * DashboardContent — Inner component to allow for Suspense boundary 
+ * DashboardPage — Main expense tracker view.
+ *
+ * BUG-8 FIX: Removed the Suspense wrapper. useExpenses uses useEffect + useState
+ * which does NOT suspend — the Suspense fallback never showed. Loading state is
+ * handled correctly by the isLoading flag from the hook.
+ * A proper route-level loading.tsx now handles the initial shell skeleton.
  */
-function DashboardContent() {
+export default function DashboardPage() {
   const {
     expenses,
     meta,
@@ -61,17 +65,3 @@ function DashboardContent() {
     </div>
   );
 }
-
-import { DashboardSkeleton } from "@/components/app/DashboardSkeleton";
-
-/**
- * Main Dashboard Entry Point
- */
-export default function DashboardPage() {
-  return (
-    <Suspense fallback={<DashboardSkeleton />}>
-      <DashboardContent />
-    </Suspense>
-  );
-}
-

@@ -5,8 +5,7 @@ import { z } from "zod";
  * Shared between frontend (client-side validation) and API route handlers.
  * Import from here — never duplicate schema logic.
  *
- * NOTE: Uses Zod v4 API. The `required_error` option was removed in v4;
- * use `error` or rely on `.min(1, msg)` for empty-string checks.
+ * NOTE: Uses Zod v4 API.
  */
 
 // ── Create Expense ─────────────────────────────────────────
@@ -86,33 +85,12 @@ export type ListExpensesQuery = z.infer<typeof listExpensesSchema>;
 // ── Client-side Form Validation ────────────────────────────
 
 /**
- * Lightweight client-side form schema (no idempotencyKey — handled internally).
- * Used in ExpenseForm before calling the API.
+ * BUG-3 FIX: Derived from createExpenseSchema using .omit() to eliminate
+ * duplicated validation logic. idempotencyKey is handled internally by
+ * useCreateExpense — the form component does not need to know about it.
  */
-export const expenseFormSchema = z.object({
-  amount: z
-    .string()
-    .trim()
-    .min(1, "Amount is required")
-    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid amount (e.g. 149.99)")
-    .refine((val) => parseFloat(val) > 0, "Amount must be greater than ₹0"),
-
-  category: z
-    .string()
-    .trim()
-    .min(1, "Category is required")
-    .max(50, "Category name too long"),
-
-  description: z
-    .string()
-    .trim()
-    .min(1, "Description is required")
-    .max(200, "Description must be under 200 characters"),
-
-  date: z
-    .string()
-    .min(1, "Date is required")
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD"),
+export const expenseFormSchema = createExpenseSchema.omit({
+  idempotencyKey: true,
 });
 
 export type ExpenseFormValues = z.infer<typeof expenseFormSchema>;

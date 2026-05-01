@@ -5,19 +5,55 @@ import { toPaise, formatCurrency } from "@/lib/money";
 import { Expense, ApiResponse, ExpenseListResponse } from "@/types";
 import { Prisma } from "@prisma/client";
 
+// ── BUG-10 FIX: Simple in-memory rate limiter (per IP, 30 req/min) ────────
+// NOTE: This is a single-instance in-memory store. In production with multiple
+// serverless instances, replace with a Redis-based solution (e.g. Upstash).
+const rateLimit = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const window = 60_000; // 1 minute
+  const max = 30;
+
+  const entry = rateLimit.get(ip);
+  if (!entry || entry.resetAt < now) {
+    rateLimit.set(ip, { count: 1, resetAt: now + window });
+    return true;
+  }
+  if (entry.count >= max) return false;
+  entry.count++;
+  return true;
+}
+
+function getClientIp(request: Request): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown"
+  );
+}
+
 /**
  * GET /api/expenses
  * Lists expenses with filtering and sorting.
  */
 export async function GET(request: Request) {
+  const ip = getClientIp(request);
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests — slow down." } as ApiResponse<never>,
+      { status: 429 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const sort = searchParams.get("sort") || "desc";
 
   try {
-    const where: Prisma.ExpenseWhereInput = category && category !== "all" ? { category } : {};
-    
-    // 1. Fetch items and total sum in parallel for performance
+    const where: Prisma.ExpenseWhereInput =
+      category && category !== "all" ? { category } : {};
+
+    // Fetch items and total sum in parallel for performance
     const [dbExpenses, aggregation] = await Promise.all([
       prisma.expense.findMany({
         where,
@@ -29,7 +65,6 @@ export async function GET(request: Request) {
       }),
     ]);
 
-    // 2. Transform DB models to UI Types
     const items: Expense[] = dbExpenses.map((e) => ({
       id: e.id,
       amount: e.amount,
@@ -55,14 +90,14 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
-      data
+      data,
     } as ApiResponse<ExpenseListResponse>);
   } catch (error) {
     console.error("API_EXPENSES_GET_ERROR", error);
-    return NextResponse.json({ 
-      success: false, 
-      error: "Internal Server Error" 
-    } as ApiResponse<never>, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" } as ApiResponse<never>,
+      { status: 500 }
+    );
   }
 }
 
@@ -71,28 +106,53 @@ export async function GET(request: Request) {
  * Idempotent creation of a new expense.
  */
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests — slow down." } as ApiResponse<never>,
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
-    
+
     // 1. Validation
     const result = createExpenseSchema.safeParse(body);
     if (!result.success) {
-      return NextResponse.json({ 
-        success: false, 
-        error: "Validation failed",
-        details: result.error.issues.map(e => ({ field: String(e.path[0]), message: e.message }))
-      } as ApiResponse<never>, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Validation failed",
+          details: result.error.issues.map((e) => ({
+            field: String(e.path[0]),
+            message: e.message,
+          })),
+        } as ApiResponse<never>,
+        { status: 400 }
+      );
     }
 
     const { amount, category, description, date, idempotencyKey } = result.data;
 
-    // 2. Optimized Atomic Idempotency
-    // We attempt to create first. If it fails with P2002, we know it exists.
-    // This is faster and avoids race conditions compared to find-then-create.
-    try {
-      const paise = toPaise(amount);
-      if (paise === null) throw new Error("Invalid amount format");
+    // BUG-2 FIX: toPaise() null is a client error (bad amount), not a server
+    // error — return 400, not 500.
+    const paise = toPaise(amount);
+    if (paise === null) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Validation failed",
+          details: [{ field: "amount", message: "Enter a valid amount (e.g. 149.99)" }],
+        } as ApiResponse<never>,
+        { status: 400 }
+      );
+    }
 
+    // 2. Optimized Atomic Idempotency
+    // Attempt to create first. If it fails with P2002, the record already exists.
+    // Faster than find-then-create and avoids race conditions.
+    try {
       const created = await prisma.expense.create({
         data: {
           amount: paise,
@@ -103,27 +163,32 @@ export async function POST(request: Request) {
         },
       });
 
-      return NextResponse.json({
-        success: true,
-        data: {
-          id: created.id,
-          amount: created.amount,
-          amountFormatted: formatCurrency(created.amount),
-          category: created.category,
-          description: created.description,
-          date: created.date.toISOString().split("T")[0],
-          createdAt: created.createdAt.toISOString(),
-          idempotencyKey: created.idempotencyKey,
-        }
-      } as ApiResponse<Expense>, { status: 201 });
-
+      return NextResponse.json(
+        {
+          success: true,
+          data: {
+            id: created.id,
+            amount: created.amount,
+            amountFormatted: formatCurrency(created.amount),
+            category: created.category,
+            description: created.description,
+            date: created.date.toISOString().split("T")[0],
+            createdAt: created.createdAt.toISOString(),
+            idempotencyKey: created.idempotencyKey,
+          },
+        } as ApiResponse<Expense>,
+        { status: 201 }
+      );
     } catch (e) {
-      // Check for Prisma unique constraint error
-      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+      // Unique constraint violation → idempotent duplicate
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P2002"
+      ) {
         const existing = await prisma.expense.findUnique({
           where: { idempotencyKey },
         });
-        
+
         if (existing) {
           return NextResponse.json({
             success: true,
@@ -137,19 +202,17 @@ export async function POST(request: Request) {
               createdAt: existing.createdAt.toISOString(),
               idempotencyKey: existing.idempotencyKey,
             },
-            idempotent: true
+            idempotent: true,
           } as ApiResponse<Expense>);
         }
       }
-      throw e; // Rethrow if not a P2002 or record not found
+      throw e; // Re-throw if not a P2002 or record not found
     }
-
   } catch (error) {
     console.error("API_EXPENSES_POST_ERROR", error);
-    return NextResponse.json({ 
-      success: false, 
-      error: "Internal Server Error" 
-    } as ApiResponse<never>, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" } as ApiResponse<never>,
+      { status: 500 }
+    );
   }
 }
-

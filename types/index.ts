@@ -23,6 +23,8 @@ export interface Expense {
 
 // ── Category ───────────────────────────────────────────────
 
+// BUG-7 FIX: Canonical name is "Transport" — not "Travel".
+// DESIGN.md had "Travel" but code everywhere uses "Transport". Standardized to "Transport".
 export type PresetCategory =
   | "Food"
   | "Transport"

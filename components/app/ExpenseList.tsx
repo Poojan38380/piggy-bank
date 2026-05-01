@@ -46,6 +46,10 @@ interface ExpenseListProps {
   isLoading?: boolean;
 }
 
+// BUG-4 FIX: Static lookup array — dynamic class names like `delay-${n}` are
+// invisible to Tailwind JIT and would be purged in production builds.
+const STAGGER_DELAY = ["", "delay-1", "delay-2", "delay-3", "delay-4", "delay-5"] as const;
+
 export function ExpenseList({ expenses, isLoading = false }: ExpenseListProps) {
   if (isLoading) return <ExpenseListSkeleton />;
 
@@ -65,7 +69,7 @@ export function ExpenseList({ expenses, isLoading = false }: ExpenseListProps) {
   return (
     <div className="flex flex-col gap-md">
       {expenses.map((expense, idx) => (
-        <div key={expense.id} className={`delay-${Math.min(idx + 1, 5)}`}>
+        <div key={expense.id} className={STAGGER_DELAY[Math.min(idx + 1, 5)]}>
           <ExpenseCard expense={expense} />
         </div>
       ))}
