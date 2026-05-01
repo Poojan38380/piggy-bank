@@ -58,11 +58,14 @@ export function LandingFooter() {
         {/* Bottom row */}
         <div className="w-full flex flex-col md:flex-row justify-between items-center flex-wrap gap-md">
           <p className="text-label text-on-surface-variant text-center md:text-left">
-            © 2026 PiggyBank by Fenmo AI
+            © 2026 PiggyBank by <Link href="https://www.linkedin.com/in/poojan-goyani-404224253" className="hover:text-teal underline underline-offset-4">Poojan Goyani</Link> for <Link href="https://www.fenmo.ai/" className="hover:text-teal underline underline-offset-4">Fenmo AI</Link>
           </p>
-          <p className="text-label text-on-surface-variant text-center md:text-right">
-            Built with the Fenmo AI design system
-          </p>
+          <Link
+            href="https://github.com/Poojan38380/piggy-bank"
+            className="text-label text-on-surface-variant hover:text-navy transition-colors font-mono"
+          >
+            GitHub Repo
+          </Link>
         </div>
       </div>
     </footer>

@@ -2,7 +2,7 @@
 
 > **Quiet Luxury Fintech.** Your money, clearly.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-1A7F71?style=flat-square)](https://piggybank.fenmo.ai)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-1A7F71?style=flat-square)](https://fenmo-piggy-bank.vercel.app)
 [![Repository](https://img.shields.io/badge/Repo-GitHub-16163F?style=flat-square)](https://github.com/Poojan38380/piggy-bank)
 
 Personal finance tools shouldn't feel like spreadsheets. PiggyBank is a high-performance expense tracker built for clarity and correctness, prioritizing data integrity and "quiet" interactions over flashy, unnecessary features.
@@ -183,3 +183,7 @@ pnpm dev
 | **Invalid Date** | Regex-based validation ensures YYYY-MM-DD format before parsing. |
 | **Rate Limiting** | In-memory limiter (30 req/min) prevents API abuse. |
 | **Float Drift** | `Math.round(val * 100)` ensures 149.99 doesn't become 149.9899. |
+
+---
+
+Built with ❤️ by [Poojan Goyani](https://www.linkedin.com/in/poojan-goyani-404224253) for **Fenmo AI**.

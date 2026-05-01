@@ -1,5 +1,6 @@
 import { signIn } from "@/lib/auth";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui";
 
 export default function LoginPage() {
@@ -65,10 +66,29 @@ export default function LoginPage() {
         </div>
 
         {/* Footer info */}
-        <div className="flex items-center gap-xs px-md py-1.5 bg-surface-container-low rounded-full border border-[rgba(199,197,207,0.2)]">
-          <span className="font-mono text-[10px] font-semibold tracking-widest uppercase text-teal">
-            Secure · Private · Precise
-          </span>
+        <div className="flex flex-col items-center gap-md">
+          <div className="flex items-center gap-xs px-md py-1.5 bg-surface-container-low rounded-full border border-[rgba(199,197,207,0.2)]">
+            <span className="font-mono text-[10px] font-semibold tracking-widest uppercase text-teal">
+              Secure · Private · Precise
+            </span>
+          </div>
+
+          <div className="flex items-center gap-lg">
+            <Link 
+              href="https://github.com/Poojan38380/piggy-bank" 
+              target="_blank"
+              className="text-[12px] text-on-surface-variant hover:text-navy transition-colors font-mono underline underline-offset-4"
+            >
+              GitHub Repo
+            </Link>
+            <Link 
+              href="https://www.linkedin.com/in/poojan-goyani-404224253" 
+              target="_blank"
+              className="text-[12px] text-on-surface-variant hover:text-navy transition-colors font-mono underline underline-offset-4"
+            >
+              LinkedIn
+            </Link>
+          </div>
         </div>
       </div>
     </div>
