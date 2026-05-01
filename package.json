@@ -1,6 +1,11 @@
 {
   "name": "fenmo-assignment",
   "version": "0.1.0",
+  "type": "module",
+  "author": {
+    "name": "Poojan38380",
+    "email": "poojangoyani@gmail.com"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +14,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@prisma/client": "6.19",
+    "dotenv": "^17.4.2",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -20,6 +27,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "prisma": "~6.19.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
