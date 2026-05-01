@@ -564,22 +564,35 @@ body {
 .delay-4 { animation-delay: 0.20s; }
 .delay-5 { animation-delay: 0.25s; }
 
-/* ── 9. SELECTION & SCROLLBAR ────────────────────────────── */
+/* ── 9. SELECTION & CUSTOM SCROLLBAR ─────────────────────── */
 ::selection {
   background-color: rgba(26, 127, 113, 0.15);
   color: var(--color-navy);
 }
 
-/* Thin scrollbar for panel-right */
-.panel-right::-webkit-scrollbar {
-  width: 4px;
+/* Global scrollbar styles (Webkit) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.panel-right::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.panel-right::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: var(--color-teal-soft);
   border-radius: var(--radius-full);
+  border: 2px solid transparent; /* creates some 'air' around the thumb */
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-teal);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-teal-soft) transparent;
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { expenseFormSchema } from "@/lib/validations";
+import { createExpenseSchema } from "@/lib/validations";
 import { toPaise, formatCurrency } from "@/lib/money";
 import { Expense } from "@/types";
 
@@ -29,6 +29,8 @@ export async function GET(request: Request) {
       category: e.category,
       description: e.description,
       date: e.date.toISOString().split("T")[0],
+      createdAt: e.createdAt.toISOString(),
+      idempotencyKey: e.idempotencyKey,
     }));
 
     // 2. Compute Meta
@@ -40,6 +42,7 @@ export async function GET(request: Request) {
         total: items.length,
         visibleTotal: totalPaise,
         visibleTotalFormatted: formatCurrency(totalPaise),
+        filteredBy: category === "all" ? null : category,
       },
     });
   } catch (error) {
@@ -57,7 +60,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // 1. Validation
-    const result = expenseFormSchema.safeParse(body);
+    const result = createExpenseSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json({ error: result.error.format() }, { status: 400 });
     }
@@ -78,13 +81,20 @@ export async function POST(request: Request) {
         category: existing.category,
         description: existing.description,
         date: existing.date.toISOString().split("T")[0],
+        createdAt: existing.createdAt.toISOString(),
+        idempotencyKey: existing.idempotencyKey,
       });
     }
 
     // 3. Create new record
+    const paise = toPaise(amount);
+    if (paise === null) {
+      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+    }
+
     const created = await prisma.expense.create({
       data: {
-        amount: toPaise(amount),
+        amount: paise,
         category,
         description,
         date: new Date(date),
@@ -99,6 +109,8 @@ export async function POST(request: Request) {
       category: created.category,
       description: created.description,
       date: created.date.toISOString().split("T")[0],
+      createdAt: created.createdAt.toISOString(),
+      idempotencyKey: created.idempotencyKey,
     }, { status: 201 });
 
   } catch (error) {

@@ -37,7 +37,12 @@ export function useExpenses() {
   // State
   const [data, setData] = React.useState<ExpenseListResponse>({
     items: [],
-    meta: { total: 0, visibleTotal: 0, visibleTotalFormatted: "₹0.00" },
+    meta: { 
+      total: 0, 
+      visibleTotal: 0, 
+      visibleTotalFormatted: "₹0.00",
+      filteredBy: null
+    },
   });
   const [isLoading, setIsLoading] = React.useState(true);
 
