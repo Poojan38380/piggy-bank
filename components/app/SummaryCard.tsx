@@ -22,51 +22,16 @@ export function SummaryCard({
   if (isLoading) return <SummaryCardSkeleton />;
 
   return (
-    <div
-      className="card"
-      style={{
-        padding: "var(--space-lg)",
-        background: "var(--color-surface)",
-        borderLeft: "4px solid var(--color-teal)",
-        display: "flex",
-        flexDirection: "column",
-        gap: 4,
-      }}
-    >
-      <p
-        className="text-label"
-        style={{ color: "var(--color-on-surface-variant)" }}
-      >
+    <div className="card-hero p-lg border-l-4 border-teal flex flex-col gap-1">
+      <p className="text-label text-navy opacity-70">
         {activeCategory ? `Spending in ${activeCategory}` : "Total Spending"}
       </p>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "40px",
-            fontWeight: 700,
-            color: "var(--color-navy)",
-            letterSpacing: "-0.02em",
-            margin: 0,
-          }}
-        >
+      <div className="flex flex-col">
+        <h2 className="text-amount-hero m-0">
           {totalFormatted}
         </h2>
-        <span
-          className="text-body-sm"
-          style={{ 
-            color: "var(--color-on-surface-variant)",
-            opacity: 0.8,
-            letterSpacing: "0.01em"
-          }}
-        >
+        <span className="text-body-sm text-navy opacity-60 tracking-wide">
           across {count} {count === 1 ? "item" : "items"}
         </span>
       </div>

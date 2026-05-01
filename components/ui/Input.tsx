@@ -38,44 +38,33 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const errorId = `${id}-error`;
     const helperId = `${id}-helper`;
 
+    const baseInputClass = "w-full font-sans text-[16px] font-normal text-on-surface bg-surface border-[1px] border-[rgba(50,65,88,0.20)] rounded-[10px] px-4 py-3 outline-none transition-all placeholder:text-outline placeholder:font-normal focus:border-teal focus:ring-3 focus:ring-teal/10";
+    
     const inputClass = [
-      "input",
-      isAmount ? "input-amount" : "",
-      error ? "input-error" : "",
+      baseInputClass,
+      isAmount ? "font-mono text-[24px] font-semibold pl-[44px]" : "",
+      error ? "border-error focus:border-error focus:ring-error/10" : "",
       className,
     ]
       .filter(Boolean)
       .join(" ");
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div className="flex flex-col gap-1.5">
         {label && (
           <label
             htmlFor={id}
-            className="text-label"
-            style={{ color: "var(--color-on-surface-variant)" }}
+            className="text-label text-on-surface-variant opacity-70"
           >
             {label}
           </label>
         )}
 
-        <div style={{ position: "relative" }}>
+        <div className="relative">
           {isAmount && (
             <span
               aria-hidden="true"
-              style={{
-                position: "absolute",
-                left: 16,
-                top: "50%",
-                transform: "translateY(-50%)",
-                fontFamily: "var(--font-mono)",
-                fontSize: "20px",
-                fontWeight: 600,
-                color: "var(--color-navy)",
-                pointerEvents: "none",
-                userSelect: "none",
-                opacity: 0.5,
-              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-[20px] font-semibold text-navy pointer-events-none select-none opacity-50"
             >
               ₹
             </span>
@@ -99,8 +88,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <p
             id={errorId}
             role="alert"
-            className="text-body-sm"
-            style={{ color: "var(--color-error)", marginTop: 2 }}
+            className="text-body-sm text-error mt-0.5"
           >
             {error}
           </p>
@@ -109,11 +97,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {helper && !error && (
           <p
             id={helperId}
-            className="text-body-sm"
-            style={{
-              color: "var(--color-on-surface-variant)",
-              marginTop: 2,
-            }}
+            className="text-body-sm text-on-surface-variant opacity-70 mt-0.5"
           >
             {helper}
           </p>
@@ -140,21 +124,22 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const id = useId(providedId);
     const errorId = `${id}-error`;
 
+    const baseInputClass = "w-full font-sans text-[16px] font-normal text-on-surface bg-surface border-[1px] border-[rgba(50,65,88,0.20)] rounded-[10px] px-4 py-3 outline-none transition-all placeholder:text-outline placeholder:font-normal focus:border-teal focus:ring-3 focus:ring-teal/10";
+
     const textareaClass = [
-      "input",
-      error ? "input-error" : "",
+      baseInputClass,
+      error ? "border-error focus:border-error focus:ring-error/10" : "",
       className,
     ]
       .filter(Boolean)
       .join(" ");
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div className="flex flex-col gap-1.5">
         {label && (
           <label
             htmlFor={id}
-            className="text-label"
-            style={{ color: "var(--color-on-surface-variant)" }}
+            className="text-label text-on-surface-variant opacity-70"
           >
             {label}
           </label>
@@ -174,8 +159,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           <p
             id={errorId}
             role="alert"
-            className="text-body-sm"
-            style={{ color: "var(--color-error)", marginTop: 2 }}
+            className="text-body-sm text-error mt-0.5"
           >
             {error}
           </p>
@@ -183,8 +167,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         {helper && !error && (
           <p
-            className="text-body-sm"
-            style={{ color: "var(--color-on-surface-variant)", marginTop: 2 }}
+            className="text-body-sm text-on-surface-variant opacity-70 mt-0.5"
           >
             {helper}
           </p>

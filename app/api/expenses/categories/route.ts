@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ApiResponse } from "@/types";
 
 /**
  * GET /api/expenses/categories
@@ -12,9 +13,17 @@ export async function GET() {
       distinct: ["category"],
     });
 
-    return NextResponse.json(categories.map((c: { category: string }) => c.category));
+    const data = categories.map((c: { category: string }) => c.category);
+
+    return NextResponse.json({
+      success: true,
+      data
+    } as ApiResponse<string[]>);
   } catch (error) {
     console.error("API_CATEGORIES_GET_ERROR", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      success: false, 
+      error: "Internal Server Error" 
+    } as ApiResponse<never>, { status: 500 });
   }
 }

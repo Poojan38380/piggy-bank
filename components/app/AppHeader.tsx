@@ -6,46 +6,16 @@ import Link from "next/link";
  */
 export function AppHeader() {
   return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "var(--space-xl)",
-      }}
-    >
+    <header className="flex justify-between items-center mb-xl">
       <Link
         href="/"
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "20px",
-          fontWeight: 700,
-          color: "var(--color-navy)",
-          letterSpacing: "-0.02em",
-          textTransform: "lowercase",
-          textDecoration: "none",
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--space-sm)",
-        }}
+        className="font-display text-[20px] font-bold text-navy tracking-tight lowercase flex items-center gap-sm no-underline"
       >
-        <span style={{ color: "var(--color-teal)" }}>○</span>
+        <span className="text-teal">○</span>
         piggybank.
       </Link>
 
-      <div
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          fontWeight: 600,
-          letterSpacing: "0.05em",
-          textTransform: "uppercase",
-          color: "var(--color-on-surface-variant)",
-          padding: "4px 8px",
-          border: "1px solid var(--color-outline-variant)",
-          borderRadius: "var(--radius-sm)",
-        }}
-      >
+      <div className="font-mono text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant px-2 py-1 border border-outline-variant rounded-sm">
         Personal v1.0
       </div>
     </header>

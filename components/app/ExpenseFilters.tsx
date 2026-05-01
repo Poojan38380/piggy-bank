@@ -27,16 +27,8 @@ export function ExpenseFilters({
   ];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "flex-end",
-        gap: "var(--space-md)",
-        marginBottom: "var(--space-xl)",
-        flexWrap: "wrap",
-      }}
-    >
-      <div style={{ flex: 1, minWidth: "200px" }}>
+    <div className="flex items-end gap-md mb-xl flex-wrap">
+      <div className="flex-1 min-w-[200px]">
         <Select
           label="Filter by Category"
           value={activeCategory || "all"}
@@ -50,9 +42,9 @@ export function ExpenseFilters({
       <Button
         variant="ghost"
         onClick={onToggleSort}
-        style={{ height: "46px" }} // match select height
+        className="h-[46px]" // match select height
       >
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px" }}>
+        <span className="font-mono text-[12px] uppercase tracking-wider">
           Date {isSortDesc ? "↓" : "↑"}
         </span>
       </Button>

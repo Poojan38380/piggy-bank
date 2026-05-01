@@ -1,7 +1,7 @@
 "use client";
 
 import { Expense } from "@/types";
-import { CategoryBadge } from "@/components/ui";
+import { CategoryBadge, ExpenseListSkeleton } from "@/components/ui";
 
 interface ExpenseCardProps {
   expense: Expense;
@@ -13,68 +13,25 @@ interface ExpenseCardProps {
  */
 export function ExpenseCard({ expense }: ExpenseCardProps) {
   return (
-    <div
-      className="card"
-      style={{
-        padding: "var(--space-md) var(--space-lg)",
-        display: "flex",
-        alignItems: "center",
-        gap: "var(--space-lg)",
-        transition: "transform 0.1s ease",
-      }}
-    >
-      {/* Category Icon Placeholder / Visual Accent */}
-      <div
-        style={{
-          width: 44,
-          height: 44,
-          borderRadius: "50%",
-          background: "var(--color-surface-container-low)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-        }}
-      >
-        <span style={{ fontSize: "20px", opacity: 0.6 }}>💸</span>
+    <div className="card-expense flex items-center gap-lg hover:shadow-hover transition-all animate-fade-in-up">
+      {/* Category Badge */}
+      <div className="shrink-0">
+        <CategoryBadge category={expense.category} />
       </div>
 
       {/* Details */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p
-          className="text-body-md"
-          style={{
-            fontWeight: 600,
-            color: "var(--color-navy)",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            marginBottom: 2,
-          }}
-        >
+      <div className="flex-1 min-w-0">
+        <p className="text-body-md font-semibold text-navy truncate mb-0.5">
           {expense.description}
         </p>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <CategoryBadge category={expense.category} />
-          <span
-            className="text-label"
-            style={{ color: "var(--color-on-surface-variant)" }}
-          >
-            {expense.date}
-          </span>
-        </div>
+        <span className="text-label text-on-surface-variant opacity-60">
+          {expense.date}
+        </span>
       </div>
 
       {/* Amount */}
-      <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "18px",
-            fontWeight: 700,
-            color: "var(--color-navy)",
-          }}
-        >
+      <div className="text-right shrink-0">
+        <p className="text-amount text-lg font-bold text-navy">
           {expense.amountFormatted}
         </p>
       </div>
@@ -83,8 +40,6 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
 }
 
 // ── ExpenseList ───────────────────────────────────────────
-
-import { ExpenseListSkeleton } from "@/components/ui";
 
 interface ExpenseListProps {
   expenses: Expense[];
@@ -96,19 +51,11 @@ export function ExpenseList({ expenses, isLoading = false }: ExpenseListProps) {
 
   if (expenses.length === 0) {
     return (
-      <div
-        style={{
-          padding: "var(--space-xxl) var(--space-lg)",
-          textAlign: "center",
-          background: "var(--color-surface-container-lowest)",
-          borderRadius: "var(--radius-card)",
-          border: "1px dashed var(--color-outline-variant)",
-        }}
-      >
-        <p className="text-body-lg" style={{ color: "var(--color-on-surface-variant)" }}>
+      <div className="py-xxl px-lg text-center bg-surface-container-lowest rounded-card border border-dashed border-outline-variant animate-fade-in">
+        <p className="text-body-lg text-on-surface-variant">
           No expenses found.
         </p>
-        <p className="text-body-sm" style={{ color: "var(--color-outline)" }}>
+        <p className="text-body-sm text-outline">
           Try clearing your filters or adding a new spend.
         </p>
       </div>
@@ -116,9 +63,11 @@ export function ExpenseList({ expenses, isLoading = false }: ExpenseListProps) {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-      {expenses.map((expense) => (
-        <ExpenseCard key={expense.id} expense={expense} />
+    <div className="flex flex-col gap-md">
+      {expenses.map((expense, idx) => (
+        <div key={expense.id} className={`delay-${Math.min(idx + 1, 5)}`}>
+          <ExpenseCard expense={expense} />
+        </div>
       ))}
     </div>
   );

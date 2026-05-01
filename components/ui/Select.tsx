@@ -36,37 +36,32 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     const id = useId(providedId);
     const errorId = `${id}-error`;
 
+    const baseInputClass = "w-full font-sans text-[16px] font-normal text-on-surface bg-surface border-[1px] border-[rgba(50,65,88,0.20)] rounded-[10px] px-4 py-3 outline-none transition-all cursor-pointer appearance-none pr-10 focus:border-teal focus:ring-3 focus:ring-teal/10";
+    
     const selectClass = [
-      "input",                    // reuse input base styles
-      error ? "input-error" : "",
+      baseInputClass,
+      error ? "border-error focus:border-error focus:ring-error/10" : "",
       className,
     ]
       .filter(Boolean)
       .join(" ");
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div className="flex flex-col gap-1.5">
         {label && (
           <label
             htmlFor={id}
-            className="text-label"
-            style={{ color: "var(--color-on-surface-variant)" }}
+            className="text-label text-on-surface-variant opacity-70"
           >
             {label}
           </label>
         )}
 
-        {/* Wrapper gives us the custom chevron */}
-        <div style={{ position: "relative" }}>
+        <div className="relative">
           <select
             ref={ref}
             id={id}
             className={selectClass}
-            style={{
-              appearance: "none",
-              paddingRight: 40,
-              cursor: "pointer",
-            }}
             aria-invalid={!!error}
             aria-describedby={error ? errorId : undefined}
             {...props}
@@ -83,7 +78,6 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             ))}
           </select>
 
-          {/* Chevron icon */}
           <ChevronDown />
         </div>
 
@@ -91,8 +85,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <p
             id={errorId}
             role="alert"
-            className="text-body-sm"
-            style={{ color: "var(--color-error)", marginTop: 2 }}
+            className="text-body-sm text-error mt-0.5"
           >
             {error}
           </p>
@@ -100,8 +93,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 
         {helper && !error && (
           <p
-            className="text-body-sm"
-            style={{ color: "var(--color-on-surface-variant)", marginTop: 2 }}
+            className="text-body-sm text-on-surface-variant opacity-70 mt-0.5"
           >
             {helper}
           </p>
@@ -117,6 +109,7 @@ function ChevronDown() {
   return (
     <svg
       aria-hidden="true"
+      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
       width="16"
       height="16"
       viewBox="0 0 24 24"
@@ -125,14 +118,6 @@ function ChevronDown() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{
-        position: "absolute",
-        right: 14,
-        top: "50%",
-        transform: "translateY(-50%)",
-        color: "var(--color-on-surface-variant)",
-        pointerEvents: "none",
-      }}
     >
       <polyline points="6 9 12 15 18 9" />
     </svg>

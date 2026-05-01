@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useCategories } from "@/hooks/useCategories";
 import { useCreateExpense } from "@/hooks/useCreateExpense";
-import { Button, Input, Select, toast } from "@/components/ui";
+import { Button, Input, toast } from "@/components/ui";
 import { expenseFormSchema, type ExpenseFormValues } from "@/lib/validations";
 
 interface ExpenseFormProps {
@@ -12,12 +12,6 @@ interface ExpenseFormProps {
 
 /**
  * ExpenseForm — The primary interaction point for adding spend.
- * 
- * Features:
- * - Instant Zod validation
- * - Category pill selector + "Other" fallback
- * - Large "Rupee" input with mono font
- * - Idempotent submission (resilient to double-taps/network lag)
  */
 export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const { categories } = useCategories();
@@ -37,7 +31,6 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setValues(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
     if (errors[name as keyof ExpenseFormValues]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
@@ -51,7 +44,6 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 1. Validate
     const result = expenseFormSchema.safeParse(values);
     if (!result.success) {
       const fieldErrors: any = {};
@@ -62,12 +54,10 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
       return;
     }
 
-    // 2. Submit
     try {
       await create(result.data);
       toast.success("Expense logged", `${result.data.description} added successfully.`);
       
-      // 3. Reset (keep date for multi-entry convenience)
       setValues(prev => ({
         ...prev,
         amount: "",
@@ -83,9 +73,9 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   return (
     <form 
       onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}
+      className="flex flex-col gap-lg"
     >
-      <h3 className="text-h3" style={{ fontSize: "18px" }}>Add Expense</h3>
+      <h3 className="text-h3 text-lg">Add Expense</h3>
 
       {/* Amount Input */}
       <Input
@@ -100,28 +90,22 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
       />
 
       {/* Category Pills */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <label className="text-label" style={{ color: "var(--color-on-surface-variant)" }}>
+      <div className="flex flex-col gap-2">
+        <label className="text-label text-on-surface-variant opacity-70">
           Category
         </label>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        <div className="flex flex-wrap gap-2">
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
               onClick={() => setCategory(cat)}
-              className={`btn-pill ${values.category === cat ? "active" : ""}`}
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                padding: "6px 12px",
-                borderRadius: "var(--radius-full)",
-                border: "1.5px solid var(--color-outline-variant)",
-                background: values.category === cat ? "var(--color-navy)" : "transparent",
-                color: values.category === cat ? "white" : "var(--color-body)",
-                cursor: "pointer",
-                transition: "all 0.15s ease",
-              }}
+              className={`
+                px-3 py-1.5 rounded-full border-[1.5px] transition-all font-mono text-[12px] cursor-pointer
+                ${values.category === cat 
+                  ? "bg-navy border-navy text-white" 
+                  : "bg-transparent border-outline-variant text-body-text hover:border-teal hover:bg-surface-container-low"}
+              `}
             >
               {cat}
             </button>
@@ -153,20 +137,11 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         type="submit" 
         isLoading={isSubmitting} 
         fullWidth
-        style={{ marginTop: "var(--space-sm)" }}
+        withArrow
+        className="mt-sm"
       >
-        Log Expense →
+        Log Expense
       </Button>
-
-      <style>{`
-        .btn-pill:hover:not(.active) {
-          border-color: var(--color-teal);
-          background: var(--color-surface-container-low);
-        }
-        .btn-pill.active {
-          border-color: var(--color-navy);
-        }
-      `}</style>
     </form>
   );
 }

@@ -2,13 +2,10 @@
 
 import * as React from "react";
 import { PRESET_CATEGORIES } from "@/lib/categories";
+import { ApiResponse } from "@/types";
 
 /**
  * useCategories — Manages the list of available categories.
- * 
- * Strategy:
- * 1. Immediate: Load PRESET_CATEGORIES (Food, Travel, etc.) so UI isn't empty.
- * 2. Background: Fetch any custom categories from the DB and merge them.
  */
 export function useCategories() {
   const [categories, setCategories] = React.useState<string[]>(PRESET_CATEGORIES);
@@ -20,7 +17,10 @@ export function useCategories() {
         const res = await fetch("/api/expenses/categories");
         if (!res.ok) return;
         
-        const dbCategories: string[] = await res.json();
+        const response: ApiResponse<string[]> = await res.json();
+        if (!response.success) return;
+        
+        const dbCategories = response.data;
         
         // Merge presets with DB categories, ensuring uniqueness
         setCategories((prev) => {

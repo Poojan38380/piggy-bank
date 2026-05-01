@@ -2,15 +2,10 @@
 
 import * as React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Expense, ExpenseFilters, ExpenseListResponse } from "@/types";
+import { Expense, ExpenseFilters, ExpenseListResponse, ApiResponse } from "@/types";
 
 /**
  * useExpenses — The primary data hook for the PiggyBank dashboard.
- * 
- * Features:
- * - Syncs filter/sort state with URL search params.
- * - Manages 'useTransition' for smooth navigation-based loading.
- * - Returns loading/error states for skeleton and toast rendering.
  */
 
 // ── Internal fetcher ──────────────────────────────────────
@@ -24,7 +19,11 @@ async function fetchExpenses(filters: ExpenseFilters): Promise<ExpenseListRespon
 
   const res = await fetch(`/api/expenses?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch expenses");
-  return res.json();
+  
+  const response: ApiResponse<ExpenseListResponse> = await res.json();
+  if (!response.success) throw new Error(response.error || "Failed to fetch expenses");
+  
+  return response.data;
 }
 
 // ── Hook ──────────────────────────────────────────────────
@@ -46,11 +45,14 @@ export function useExpenses() {
   });
   const [isLoading, setIsLoading] = React.useState(true);
 
-  // Derived Filters from URL
-  const filters: ExpenseFilters = React.useMemo(() => ({
-    category: searchParams.get("category"),
-    sortDesc: searchParams.get("sort") !== "asc", // default to desc
-  }), [searchParams]);
+  // Derived Filters from URL — Normalize 'all' to null for UI consistency
+  const filters: ExpenseFilters = React.useMemo(() => {
+    const cat = searchParams.get("category");
+    return {
+      category: !cat || cat === "all" ? null : cat,
+      sortDesc: searchParams.get("sort") !== "asc", // default to desc
+    };
+  }, [searchParams]);
 
   // Load Data
   const load = React.useCallback(async () => {

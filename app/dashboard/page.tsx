@@ -11,7 +11,6 @@ import { ExpenseList } from "@/components/app/ExpenseList";
 
 /**
  * DashboardContent — Inner component to allow for Suspense boundary 
- * around search param usage.
  */
 function DashboardContent() {
   const {
@@ -25,12 +24,12 @@ function DashboardContent() {
   } = useExpenses();
 
   return (
-    <div className="dashboard-layout">
+    <div className="flex flex-col lg:flex-row min-h-screen max-w-[1440px] mx-auto bg-background">
       {/* LEFT PANEL: Branding + Add Expense */}
-      <aside className="panel-left">
+      <aside className="w-full lg:w-[40%] p-lg lg:p-xxl lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-background border-b lg:border-b-0 lg:border-r border-divider">
         <AppHeader />
         
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xl)" }}>
+        <div className="flex flex-col gap-xl">
           <SummaryCard 
             totalFormatted={meta?.visibleTotalFormatted}
             count={meta?.total}
@@ -38,14 +37,14 @@ function DashboardContent() {
             activeCategory={filters.category}
           />
 
-          <div className="card" style={{ padding: "var(--space-lg)", background: "var(--color-surface)" }}>
+          <div className="card p-lg bg-surface shadow-card">
             <ExpenseForm onSuccess={refetch} />
           </div>
         </div>
       </aside>
 
       {/* RIGHT PANEL: Filters + List */}
-      <main className="panel-right">
+      <main className="w-full lg:w-[60%] p-lg lg:p-xxl bg-panel min-h-screen">
         <ExpenseFilters 
           activeCategory={filters.category}
           onCategoryChange={setCategory}
@@ -53,58 +52,13 @@ function DashboardContent() {
           onToggleSort={toggleSort}
         />
 
-        <div style={{ marginBottom: "var(--space-lg)" }}>
-          <h3 className="text-label" style={{ marginBottom: "var(--space-md)", opacity: 0.6 }}>
+        <div className="mb-lg">
+          <h3 className="text-label mb-md opacity-60">
             {filters.category ? `Items in ${filters.category}` : "Recent Expenses"}
           </h3>
           <ExpenseList expenses={expenses} isLoading={isLoading} />
         </div>
       </main>
-
-      <style>{`
-        .dashboard-layout {
-          display: flex;
-          min-height: 100vh;
-          max-width: 1440px;
-          margin: 0 auto;
-          background: var(--color-bg);
-        }
-
-        .panel-left {
-          width: 40%;
-          padding: var(--space-xxl);
-          position: sticky;
-          top: 0;
-          height: 100vh;
-          overflow-y: auto;
-          border-right: 1px solid rgba(199, 197, 207, 0.2);
-        }
-
-        .panel-right {
-          width: 60%;
-          padding: var(--space-xxl);
-          background: var(--color-bg-panel);
-        }
-
-        /* Mobile Layout */
-        @media (max-width: 1024px) {
-          .dashboard-layout {
-            flex-direction: column;
-          }
-          .panel-left {
-            width: 100%;
-            height: auto;
-            position: relative;
-            padding: var(--space-lg);
-            border-right: none;
-            border-bottom: 1px solid rgba(199, 197, 207, 0.2);
-          }
-          .panel-right {
-            width: 100%;
-            padding: var(--space-lg);
-          }
-        }
-      `}</style>
     </div>
   );
 }
@@ -114,7 +68,7 @@ function DashboardContent() {
  */
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<div className="p-xxl">Loading Dashboard...</div>}>
+    <Suspense fallback={<div className="p-xxl font-mono text-navy">Loading Dashboard...</div>}>
       <DashboardContent />
     </Suspense>
   );
