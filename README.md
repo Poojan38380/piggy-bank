@@ -9,6 +9,36 @@ Personal finance tools shouldn't feel like spreadsheets. PiggyBank is a high-per
 
 ---
 
+## 📱 Interface
+
+### Landing & Conversion
+![Landing Hero](./public/demo-images/landing-hero.png)
+
+<table width="100%">
+  <tr>
+    <td width="66%"><img src="./public/demo-images/landing-page-full-laptop.png" alt="Desktop Landing"></td>
+    <td width="33%"><img src="./public/demo-images/landing-page-full-mobile.png" alt="Mobile Landing"></td>
+  </tr>
+</table>
+
+### Dashboard & Tracking
+<table width="100%">
+  <tr>
+    <td width="66%"><img src="./public/demo-images/dashboard.png" alt="Desktop Dashboard"></td>
+    <td width="33%"><img src="./public/demo-images/dashboard-full-mobile.png" alt="Mobile Dashboard"></td>
+  </tr>
+</table>
+
+### Secure Access
+<table width="100%">
+  <tr>
+    <td width="66%"><img src="./public/demo-images/login-page.png" alt="Desktop Login"></td>
+    <td width="33%"><img src="./public/demo-images/login-page-mobile.png" alt="Mobile Login"></td>
+  </tr>
+</table>
+
+---
+
 ## 🏗️ The Hard Parts
 
 ### Atomic Idempotency
