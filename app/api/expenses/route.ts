@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     });
 
     // 1. Transform DB models to UI Types (adding formatted strings)
-    const items: Expense[] = dbExpenses.map((e) => ({
+    const items: Expense[] = dbExpenses.map((e: any) => ({
       id: e.id,
       amount: e.amount,
       amountFormatted: formatCurrency(e.amount),
