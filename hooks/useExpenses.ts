@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Expense, ExpenseFilters, ExpenseListResponse, ApiResponse } from "@/types";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 
 /**
  * useExpenses — The primary data hook for the PiggyBank dashboard.
@@ -19,10 +19,10 @@ async function fetchExpenses(filters: ExpenseFilters): Promise<ExpenseListRespon
 
   const res = await fetch(`/api/expenses?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch expenses");
-  
+
   const response: ApiResponse<ExpenseListResponse> = await res.json();
   if (!response.success) throw new Error(response.error || "Failed to fetch expenses");
-  
+
   return response.data;
 }
 
@@ -31,22 +31,22 @@ async function fetchExpenses(filters: ExpenseFilters): Promise<ExpenseListRespon
 export function useExpenses() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = React.useTransition();
+  const [isPending, startTransition] = useTransition();
 
   // State
-  const [data, setData] = React.useState<ExpenseListResponse>({
+  const [data, setData] = useState<ExpenseListResponse>({
     items: [],
-    meta: { 
-      total: 0, 
-      visibleTotal: 0, 
+    meta: {
+      total: 0,
+      visibleTotal: 0,
       visibleTotalFormatted: "₹0.00",
       filteredBy: null
     },
   });
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Derived Filters from URL — Normalize 'all' to null for UI consistency
-  const filters: ExpenseFilters = React.useMemo(() => {
+  const filters: ExpenseFilters = useMemo(() => {
     const cat = searchParams.get("category");
     return {
       category: !cat || cat === "all" ? null : cat,
@@ -55,7 +55,7 @@ export function useExpenses() {
   }, [searchParams]);
 
   // Load Data
-  const load = React.useCallback(async () => {
+  const load = useCallback(async () => {
     setIsLoading(true);
     try {
       const result = await fetchExpenses(filters);
@@ -67,7 +67,7 @@ export function useExpenses() {
     }
   }, [filters]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     load();
   }, [load]);
 
@@ -76,7 +76,7 @@ export function useExpenses() {
     const params = new URLSearchParams(searchParams);
     if (category) params.set("category", category);
     else params.delete("category");
-    
+
     startTransition(() => {
       router.push(`?${params.toString()}`);
     });
@@ -86,7 +86,7 @@ export function useExpenses() {
     const params = new URLSearchParams(searchParams);
     const isCurrentlyDesc = params.get("sort") !== "asc";
     params.set("sort", isCurrentlyDesc ? "asc" : "desc");
-    
+
     startTransition(() => {
       router.push(`?${params.toString()}`);
     });
