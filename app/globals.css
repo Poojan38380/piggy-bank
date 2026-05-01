@@ -1,26 +1,585 @@
 @import "tailwindcss";
 
+/* ============================================================
+   PiggyBank by Fenmo — Design System
+   Source: Google Stitch MCP + Fenmo Brand Guidelines
+   DO NOT edit ad-hoc — all changes must trace back to DESIGN.md
+   ============================================================ */
+
+/* ── 1. DESIGN TOKENS (:root) ────────────────────────────── */
+/* Fonts are loaded via next/font/google in app/layout.tsx   */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- Font Families --- */
+  --font-display: 'Work Sans', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+  /* NOTE: --font-mono is used for ALL rupee amounts — non-negotiable */
+
+  /* --- Fenmo Brand Semantic Colors --- */
+  --color-navy:       #16163F;   /* primary dark — headings, primary-container */
+  --color-charcoal:   #282626;   /* primary CTA buttons */
+  --color-teal:       #1A7F71;   /* brand accent — logo, success, active */
+  --color-teal-soft:  #C0DBD4;   /* card fills, skeleton, category pills */
+  --color-teal-glow:  rgba(26, 127, 113, 0.10); /* focus ring */
+  --color-body:       #324158;   /* body text, secondary labels */
+  --color-bg:         #FAFAF9;   /* page background — warm off-white */
+  --color-surface:    #FFFFFF;   /* card surface */
+  --color-bg-panel:   #F5F5F3;   /* right panel background */
+  --color-error:      #C0392B;   /* error state — muted, not loud */
+  --color-success:    #1A7F71;   /* same as teal */
+
+  /* --- Stitch Material Color Tokens --- */
+  --color-surface-dim:              #cbdbf8;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low:    #f0f3ff;
+  --color-surface-container:        #e7eeff;
+  --color-surface-container-high:   #dee9ff;
+  --color-surface-container-highest:#d4e3ff;
+  --color-on-surface:               #0c1c31;
+  --color-on-surface-variant:       #47464e;
+  --color-inverse-surface:          #223147;
+  --color-inverse-on-surface:       #ebf1ff;
+  --color-outline:                  #77767f;
+  --color-outline-variant:          #c8c5cf;
+  --color-primary:                  #000000;
+  --color-on-primary:               #ffffff;
+  --color-primary-container:        #16163f;
+  --color-on-primary-container:     #807faf;
+  --color-secondary:                #006b5e;
+  --color-on-secondary:             #ffffff;
+  --color-secondary-container:      #99f3e2;
+  --color-on-secondary-container:   #007164;
+  --color-error-container:          #ffdad6;
+  --color-on-error-container:       #93000a;
+
+  /* --- Gradients --- */
+  --gradient-hero:    linear-gradient(135deg, #C0DBD4 0%, #E8D5E8 100%);
+  --gradient-cta:     linear-gradient(135deg, #1A7F71 0%, #16163F 100%);
+
+  /* --- Border Radius --- */
+  --radius-sm:    4px;    /* chips, small badges */
+  --radius-input: 10px;   /* buttons, input fields */
+  --radius-card:  20px;   /* expense cards, panels */
+  --radius-hero:  40px;   /* hero cards, summary */
+  --radius-full:  9999px; /* status pills, loaders */
+
+  /* --- Shadows --- */
+  --shadow-card:  0 2px 8px rgba(22, 22, 63, 0.06);
+  --shadow-hover: 0 6px 20px rgba(22, 22, 63, 0.10);
+  --shadow-modal: 0 8px 24px rgba(22, 22, 63, 0.08);
+
+  /* --- Spacing --- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --gutter: 24px;
+  --container-margin: 48px;
+  --container-max: 1440px;
+
+  /* --- Category Badge Colors --- */
+  --badge-food-bg:          #FEF3C7;
+  --badge-food-text:        #92400E;
+  --badge-travel-bg:        #DBEAFE;
+  --badge-travel-text:      #1E40AF;
+  --badge-bills-bg:         #FCE7F3;
+  --badge-bills-text:       #9D174D;
+  --badge-shopping-bg:      #EDE9FE;
+  --badge-shopping-text:    #5B21B6;
+  --badge-health-bg:        #D1FAE5;
+  --badge-health-text:      #065F46;
+  --badge-entertainment-bg: #FFE4E6;
+  --badge-entertainment-text:#9F1239;
+  --badge-education-bg:     #E0F2FE;
+  --badge-education-text:   #0C4A6E;
+  --badge-other-bg:         #F1F5F9;
+  --badge-other-text:       #475569;
+
+  /* --- Border utilities --- */
+  --border-input: 1px solid rgba(50, 65, 88, 0.20);
+  --border-divider: 1px solid rgba(50, 65, 88, 0.10);
 }
 
+/* ── 3. TAILWIND THEME EXTENSION ─────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Map font families into Tailwind utilities */
+  --font-sans:    var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono:    var(--font-mono);
+
+  /* Map semantic colors into Tailwind color utilities */
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-on-surface);
+
+  /* Expose brand colors as Tailwind utilities */
+  --color-navy:       var(--color-navy);
+  --color-charcoal:   var(--color-charcoal);
+  --color-teal:       var(--color-teal);
+  --color-teal-soft:  var(--color-teal-soft);
+  --color-body-text:  var(--color-body);
+  --color-surface:    var(--color-surface);
+  --color-panel:      var(--color-bg-panel);
+  --color-error:      var(--color-error);
+  --color-success:    var(--color-success);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── 4. RESET & BASE ─────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── 5. TYPOGRAPHY UTILITIES ─────────────────────────────── */
+.text-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-navy);
+}
+
+.text-h1 {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-navy);
+}
+
+.text-h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-navy);
+}
+
+.text-h3 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-navy);
+}
+
+.text-body-lg {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-body-md {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-body-sm {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Data labels — for amounts, financial numbers, filters */
+.text-data {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+/* Small caps labels */
+.text-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Amount display — ALWAYS IBM Plex Mono */
+.text-amount {
+  font-family: var(--font-mono) !important;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.text-amount-hero {
+  font-family: var(--font-display) !important;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-navy);
+}
+
+/* ── 6. COMPONENT BASE STYLES ────────────────────────────── */
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-input);
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--color-charcoal);
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #3a3737;
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: #1a1818;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-navy);
+  border: 1.5px solid var(--color-navy);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background-color: rgba(22, 22, 63, 0.05);
+}
+
+.btn-teal {
+  background-color: var(--color-teal);
+  color: #ffffff;
+}
+
+.btn-teal:hover:not(:disabled) {
+  background-color: #155f56;
+}
+
+.btn-teal-soft {
+  background-color: var(--color-teal-soft);
+  color: var(--color-navy);
+}
+
+.btn-teal-soft:hover:not(:disabled) {
+  background-color: #aecfc8;
+}
+
+.btn-sm {
+  font-size: 12px;
+  padding: 8px 16px;
+}
+
+.btn-lg {
+  font-size: 16px;
+  padding: 16px 32px;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* --- Input Fields --- */
+.input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-on-surface);
+  background-color: var(--color-surface);
+  border: var(--border-input);
+  border-radius: var(--radius-input);
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--color-outline);
+  font-weight: 400;
+}
+
+.input:focus {
+  border-color: var(--color-teal);
+  box-shadow: 0 0 0 3px var(--color-teal-glow);
+}
+
+.input-error {
+  border-color: var(--color-error) !important;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.10) !important;
+}
+
+/* Amount input — monospace, large */
+.input-amount {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* --- Cards --- */
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.card-hero {
+  background: var(--gradient-hero);
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-card);
+}
+
+.card-expense {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  border-left: 3px solid transparent;
+  transition: box-shadow 0.2s ease, border-left-color 0.2s ease;
+  padding: var(--space-md) var(--space-lg);
+}
+
+.card-expense:hover {
+  box-shadow: var(--shadow-hover);
+  border-left-color: var(--color-teal);
+}
+
+/* --- Category Badges --- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.badge-food         { background: var(--badge-food-bg);          color: var(--badge-food-text); }
+.badge-travel       { background: var(--badge-travel-bg);        color: var(--badge-travel-text); }
+.badge-bills        { background: var(--badge-bills-bg);         color: var(--badge-bills-text); }
+.badge-shopping     { background: var(--badge-shopping-bg);      color: var(--badge-shopping-text); }
+.badge-health       { background: var(--badge-health-bg);        color: var(--badge-health-text); }
+.badge-entertainment{ background: var(--badge-entertainment-bg); color: var(--badge-entertainment-text); }
+.badge-education    { background: var(--badge-education-bg);     color: var(--badge-education-text); }
+.badge-other        { background: var(--badge-other-bg);         color: var(--badge-other-text); }
+
+/* --- Skeleton Loaders --- */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-teal-soft) 25%,
+    #e8f5f2 50%,
+    var(--color-teal-soft) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+.skeleton-card {
+  border-radius: var(--radius-card);
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    var(--color-teal-soft) 25%,
+    #e8f5f2 50%,
+    var(--color-teal-soft) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* --- Category Filter Pills --- */
+.filter-pill {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  border: 1.5px solid var(--color-outline-variant);
+  background-color: transparent;
+  color: var(--color-body);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.filter-pill:hover {
+  border-color: var(--color-teal);
+  color: var(--color-teal);
+}
+
+.filter-pill-active {
+  background-color: var(--color-teal);
+  border-color: var(--color-teal);
+  color: #ffffff;
+}
+
+/* --- Dividers --- */
+.divider {
+  border: none;
+  border-top: var(--border-divider);
+  margin: 0;
+}
+
+/* --- Focus Ring (accessibility) --- */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+/* ── 7. LAYOUT UTILITIES ─────────────────────────────────── */
+.container-app {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-margin);
+}
+
+@media (max-width: 768px) {
+  .container-app {
+    padding-inline: var(--space-md);
+  }
+}
+
+/* Split panel layout (dashboard) */
+.panel-left {
+  width: 40%;
+  min-width: 340px;
+  max-width: 480px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: var(--color-bg);
+  padding: var(--space-xl) var(--space-lg);
+  border-right: var(--border-divider);
+}
+
+.panel-right {
+  flex: 1;
+  background-color: var(--color-bg-panel);
+  padding: var(--space-xl) var(--space-lg);
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+/* ── 8. ANIMATION UTILITIES ──────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease forwards;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.25s ease forwards;
+}
+
+/* Stagger delay helpers for expense list items */
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.10s; }
+.delay-3 { animation-delay: 0.15s; }
+.delay-4 { animation-delay: 0.20s; }
+.delay-5 { animation-delay: 0.25s; }
+
+/* ── 9. SELECTION & SCROLLBAR ────────────────────────────── */
+::selection {
+  background-color: rgba(26, 127, 113, 0.15);
+  color: var(--color-navy);
+}
+
+/* Thin scrollbar for panel-right */
+.panel-right::-webkit-scrollbar {
+  width: 4px;
+}
+
+.panel-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-right::-webkit-scrollbar-thumb {
+  background-color: var(--color-teal-soft);
+  border-radius: var(--radius-full);
 }
