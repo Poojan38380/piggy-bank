@@ -10,11 +10,23 @@
 | Phase | Name | Status | Notes |
 |-------|------|--------|-------|
 | **Phase 0** | Bug Fixes | ✅ **COMPLETE** | All 10 bugs fixed, build clean |
-| **Phase 1** | Auth (Google OAuth + Prisma) | 🔜 Next | Awaiting execution |
-| **Phase 2** | Custom Categories + Emojis | 🔜 Pending | Depends on Phase 1 |
+| **Phase 1** | Auth (Google OAuth + Prisma) | ✅ **COMPLETE** | Google OAuth, Proxy migration, User scoping |
+| **Phase 2** | Custom Categories + Emojis | 🔜 Next | Ready for migration |
 | **Phase 3** | Dashboard Full Redesign | 🔜 Pending | Depends on Phase 1 |
 | **Phase 4** | Charts & Analytics | 🔜 Pending | Depends on Phase 3 |
 | **Phase 5** | Polish & Improvements | 🔜 Pending | Final phase |
+
+---
+
+### 📅 Recent Activity
+- **May 1, 2026**: Phase 1 (Auth Foundation) COMPLETED.
+    - Integrated Google OAuth via NextAuth v5.
+    - Migrated middleware to `proxy.ts` (Next.js 16).
+    - Created branded `/login` page.
+    - Secured all API routes with user-level isolation.
+- **May 1, 2026**: Phase 0 (Bug Fixes) COMPLETED.
+    - 10/10 bugs resolved.
+    - Prisma/MongoDB ready.
 
 ---
 

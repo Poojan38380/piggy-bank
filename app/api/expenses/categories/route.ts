@@ -1,14 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ApiResponse } from "@/types";
+import { auth } from "@/lib/auth";
 
 /**
  * GET /api/expenses/categories
- * Returns all distinct categories used in the system.
+ * Returns distinct categories used by the current user.
  */
 export async function GET() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" } as ApiResponse<never>,
+      { status: 401 }
+    );
+  }
+
   try {
     const categories = await prisma.expense.findMany({
+      where: { userId: session.user.id },
       select: { category: true },
       distinct: ["category"],
     });
