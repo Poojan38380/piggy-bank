@@ -12,7 +12,7 @@ export async function GET() {
       distinct: ["category"],
     });
 
-    return NextResponse.json(categories.map((c) => c.category));
+    return NextResponse.json(categories.map((c: { category: string }) => c.category));
   } catch (error) {
     console.error("API_CATEGORIES_GET_ERROR", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
