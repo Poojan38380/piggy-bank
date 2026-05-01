@@ -1,58 +1,56 @@
-# Frontend Implementation Plan — Fenmo Expense Tracker
+# Frontend Implementation Plan — PiggyBank by Fenmo
 
 > Stack: **Next.js 16.2** · **TypeScript** · **Prisma + MongoDB** · **Tailwind CSS v4** · **Google Stitch MCP**  
-> Approach: **Frontend-first** (beautiful, functional UI with mock data → wire to backend later)  
+> App Name: **PiggyBank** | Brand: **Fenmo AI** (fenmo.ai)  
+> Approach: **Frontend-first** → mock data → backend wiring  
 > Date: May 1, 2026
 
 ---
 
-## Overview
+## Decisions — LOCKED ✅
 
-This plan delivers the **best possible frontend** for the expense tracker before touching the backend. We build the full UI shell with mock data, all interaction states, and pixel-perfect design — then in a separate phase, wire real Prisma/MongoDB API routes underneath.
-
-The project already has:
-- ✅ Next.js 16.2 (App Router), TypeScript, Tailwind CSS v4
-- ✅ Prisma client (`lib/prisma.ts`) with MongoDB (`prisma/schema.prisma`)
-- ✅ Stitch MCP connected
-- ✅ `app/` directory scaffold (bare `page.tsx`, `layout.tsx`, `globals.css`)
-
----
-
-## Decisions Needed From You
-
-### 1. Design Direction
-Which aesthetic direction do you prefer?
-
-- **Option A — "Paper Ledger"**: Warm cream/off-white, ink-dark text, editorial serif for amounts. Trustworthy, anti-fintech, newspaper-ish density.
-- **Option B — "Midnight Finance"**: Near-black surface, frosted glass cards, copper/amber accent for amounts. Premium dark mode.
-- **Option C — "Soft Utility"**: Cool stone-gray palette, forest-green accent, tight grid. Linear/Notion productivity vibes.
-
-### 2. Category Strategy
-- **Fixed presets only**: Food, Travel, Bills, Shopping, Health, Entertainment, Education, Other
-- **Presets + custom**: Show presets with a "+ Custom" pill that reveals a text input
-
-### 3. Layout
-- **Single column**: Header → Summary → Form CTA → Filters → List (mobile-first, simple)
-- **Split panel**: Left = sticky summary + form; Right = scrollable filter + list (desktop-first, rich)
+| Decision | Choice |
+|----------|--------|
+| Design direction | Fenmo AI brand — navy/teal/mono, "quiet luxury fintech" |
+| App name | **PiggyBank** |
+| Categories | Presets (8) + custom text input |
+| Layout | Split panel (desktop) + single column (mobile) |
+| Landing page | YES — full marketing landing page |
+| Font stack | Work Sans · IBM Plex Sans · IBM Plex Mono |
+| Accent color | `#1A7F71` Fenmo teal |
 
 ---
 
-## Architecture Summary
+## Brand Design System — Fenmo AI
 
-### Already in place
-| Item | Status |
-|------|--------|
-| Next.js 16.2 App Router | ✅ |
-| TypeScript | ✅ |
-| Tailwind CSS v4 | ✅ |
-| Prisma + MongoDB (`@prisma/client` 6.19) | ✅ |
-| `lib/prisma.ts` singleton | ✅ |
-| `prisma/schema.prisma` with `Expense` model | ✅ |
-| `idempotencyKey @unique` field | ✅ |
+### Colors (extracted from fenmo.ai live site)
+```
+--color-navy:       #16163F   /* hero text, primary headings */
+--color-charcoal:   #282626   /* CTA buttons, primary action */
+--color-teal:       #1A7F71   /* accent, logo, success, active */
+--color-teal-soft:  #C0DBD4   /* card fills, skeleton, pills */
+--color-body:       #324158   /* body text, secondary labels */
+--color-bg:         #FAFAF9   /* page background */
+--color-surface:    #FFFFFF   /* card surface */
+--color-bg-panel:   #F5F5F3   /* right panel background */
+--color-error:      #C0392B   /* inline error state */
+--gradient-hero:    linear-gradient(135deg, #C0DBD4 0%, #E8D5E8 100%)
+```
 
-### To be added
-```bash
-pnpm add zod date-fns
+### Typography
+```
+--font-display:  'Work Sans'     → headings, hero, card titles
+--font-body:     'IBM Plex Sans' → body copy, descriptions, labels
+--font-mono:     'IBM Plex Mono' → amounts, buttons, tags, filters, data
+```
+
+### Component Tokens
+```
+--radius-button: 10px
+--radius-card:   20px
+--radius-hero:   40px
+--shadow-card:   0 2px 8px rgba(22, 22, 63, 0.06)
+--shadow-hover:  0 6px 20px rgba(22, 22, 63, 0.10)
 ```
 
 ---
@@ -63,153 +61,183 @@ pnpm add zod date-fns
 fenmo-assignment/
 ├── app/
 │   ├── layout.tsx              ← Update: fonts, metadata, SEO
-│   ├── page.tsx                ← Replace: full page assembly
-│   ├── globals.css             ← Replace: design system tokens
+│   ├── page.tsx                ← LANDING PAGE (marketing)
+│   ├── dashboard/
+│   │   └── page.tsx            ← SPLIT PANEL APP (main tracker)
+│   ├── globals.css             ← Full Fenmo design system tokens
 │   └── api/
 │       └── expenses/
-│           ├── route.ts        ← NEW: GET + POST (Phase 2)
+│           ├── route.ts        ← GET + POST (Phase 2)
 │           └── categories/
-│               └── route.ts    ← NEW: GET categories (Phase 2)
+│               └── route.ts    ← GET categories (Phase 2)
 ├── components/
-│   ├── ui/                     ← NEW: Button, Input, Select, Badge, Skeleton, Toast
-│   ├── AppHeader.tsx           ← NEW
-│   ├── SummaryStrip.tsx        ← NEW
-│   ├── ExpenseForm.tsx         ← NEW
-│   ├── ExpenseFilters.tsx      ← NEW
-│   ├── ExpenseList.tsx         ← NEW
-│   └── CategoryBadge.tsx       ← NEW
+│   ├── ui/                     ← Primitives: Button, Input, Select, Badge, Skeleton, Toast
+│   ├── landing/                ← Landing-specific sections
+│   │   ├── Hero.tsx
+│   │   ├── Features.tsx
+│   │   ├── HowItWorks.tsx
+│   │   └── LandingCTA.tsx
+│   ├── app/                    ← Dashboard-specific components
+│   │   ├── AppHeader.tsx
+│   │   ├── SummaryCard.tsx
+│   │   ├── ExpenseForm.tsx
+│   │   ├── ExpenseFilters.tsx
+│   │   ├── ExpenseList.tsx
+│   │   ├── ExpenseCard.tsx
+│   │   └── CategoryBadge.tsx
+│   └── shared/
+│       └── FenmoFooter.tsx
 ├── hooks/
-│   ├── useExpenses.ts          ← NEW
-│   └── useCategories.ts        ← NEW
+│   ├── useExpenses.ts
+│   └── useCategories.ts
 ├── lib/
-│   ├── prisma.ts               ← Already exists ✅
-│   ├── categories.ts           ← NEW
-│   ├── money.ts                ← NEW
-│   ├── validations.ts          ← NEW
-│   └── mock-data.ts            ← NEW (removed after backend phase)
+│   ├── prisma.ts               ← Exists ✅
+│   ├── categories.ts
+│   ├── money.ts
+│   ├── validations.ts
+│   └── mock-data.ts            ← Removed after backend phase
 ├── types/
-│   └── index.ts                ← NEW
-└── DESIGN.md                   ← NEW (from Stitch MCP)
+│   └── index.ts
+└── DESIGN.md                   ← From Stitch MCP
 ```
 
 ---
 
 ## Execution Phases
 
-### Phase 0 — Stitch MCP Design Extraction (30 min)
-1. Verify Stitch project accessible: `"List my Stitch projects"`
-2. Extract design tokens → `DESIGN.md` + update `globals.css`
-3. Fallback if Stitch unavailable: design directly from PERPLEX roadmap aesthetic guidance
+### Phase 0 — Stitch MCP Design Extraction
+See `docs/PLANS/STITCH_PROMPT.md` for the exact prompt to paste into Stitch.
 
-### Phase 1 — Shared Utilities (20 min)
-- `pnpm add zod date-fns`
-- Create `types/index.ts` — Expense, ExpenseFilters, ApiResponse, ExpenseMeta
-- Create `lib/categories.ts` — PRESET_CATEGORIES array
-- Create `lib/money.ts` — rupeesToPaise, paiseToRupees, formatCurrency, sumPaise
-- Create `lib/validations.ts` — Zod schemas (shared frontend/backend)
-- Create `lib/mock-data.ts` — 8–10 hardcoded mock expenses for visual dev
+1. In agent chat: `"List my Stitch projects"` → confirm project accessible
+2. Paste the full prompt from `STITCH_PROMPT.md` into Stitch → generate all 4 screens
+3. Run Stitch MCP to extract tokens → `DESIGN.md` + update `globals.css`
 
-### Phase 2 — Data Hooks (30 min)
-- `hooks/useExpenses.ts` — fetch, filter, sort, URL param sync
-- `hooks/useCategories.ts` — fetch distinct categories
+**Fallback**: If Stitch unavailable, use the brand tokens above directly.
+
+---
+
+### Phase 1 — Foundation Setup (20 min)
+```bash
+pnpm add zod date-fns
+```
+- `types/index.ts` — Expense, ExpenseFilters, ApiResponse, ExpenseMeta
+- `lib/categories.ts` — PRESET_CATEGORIES + custom category handling
+- `lib/money.ts` — rupeesToPaise, paiseToRupees, formatCurrency, sumPaise
+- `lib/validations.ts` — Zod schemas (shared frontend/backend)
+- `lib/mock-data.ts` — 10 hardcoded mock expenses across 5 categories
+- `app/globals.css` — Full Fenmo design system (CSS custom properties)
+- `app/layout.tsx` — Google Fonts: Work Sans + IBM Plex Sans + IBM Plex Mono
+
+---
+
+### Phase 2 — Hooks (30 min)
+- `hooks/useExpenses.ts` — fetch with filter/sort params, URL param sync
+- `hooks/useCategories.ts` — fetch distinct categories, merge with presets
+
+---
 
 ### Phase 3 — Primitive UI Components (45 min)
-- `components/ui/button.tsx` — primary/ghost/destructive + loading state
-- `components/ui/input.tsx` — label + error + helper
-- `components/ui/select.tsx` — styled native select
-- `components/ui/badge.tsx` — color badge
-- `components/ui/skeleton.tsx` — shimmer animation
-- `components/ui/toast.tsx` — error/success notification
 
-### Phase 4 — Feature Components (90 min)
-- `components/AppHeader.tsx`
-- `components/SummaryStrip.tsx` — animated total number
-- `components/CategoryBadge.tsx` — deterministic color per category
-- `components/ExpenseForm.tsx` — full form with idempotency + Zod validation
-- `components/ExpenseFilters.tsx` — category + sort + URL sync
-- `components/ExpenseList.tsx` — cards + skeleton + empty + error states
+| Component | Key Notes |
+|-----------|-----------|
+| `ui/Button` | Variants: primary (charcoal), ghost, teal. Loading state. 10px radius. Arrow `→` in text. |
+| `ui/Input` | With label + error + helper. ₹ prefix variant for amount. |
+| `ui/Select` | Styled native select. 10px radius. |
+| `ui/Badge` | Category badge. 8 earth-tone presets. IBM Plex Mono text. |
+| `ui/Skeleton` | Shimmer using `--color-teal-soft` as base. |
+| `ui/Toast` | Error/success. Slides in from top-right. |
 
-### Phase 5 — Page Assembly (30 min)
-- Replace `app/page.tsx` with full composition
-- Update `app/layout.tsx` — fonts, metadata, SEO
+---
 
-### Phase 6 — Polish (30 min)
-- Visual review against DESIGN.md
-- Animation timing refinement
-- Mobile responsiveness check
+### Phase 4 — Landing Page (60 min)
+`app/page.tsx` + `components/landing/`
+
+**Sections:**
+1. **Navbar** — "piggybank." logo + "Powered by Fenmo AI ↗" badge right
+2. **Hero** — 64px Work Sans headline + sub-text + 2 CTAs + app split-panel mockup visual + stat pills
+3. **Features** — 3 teal-soft cards with key differentiators
+4. **How It Works** — 3-step flow with connecting lines
+5. **CTA Strip** — gradient background, final conversion section
+6. **Footer** — minimal, Fenmo-branded
+
+---
+
+### Phase 5 — App Dashboard (90 min)
+`app/dashboard/page.tsx` + `components/app/`
+
+**Left Panel (40%, sticky):**
+- `AppHeader` — "piggybank." wordmark
+- `SummaryCard` — Total in Work Sans 700 48px, teal left-border, filtered state variant
+- `ExpenseForm` — Amount (large mono), category pills + "+ Custom" input reveal, description, date, submit CTA
+
+**Right Panel (60%, scrollable):**
+- `ExpenseFilters` — category dropdown + sort toggle, URL param sync
+- `ExpenseList` — cards with skeleton/empty/error states
+- `ExpenseCard` — CategoryBadge | description + date | **amount** (IBM Plex Mono, right-aligned)
+
+**Mobile (responsive collapse):**
+- Single column: Summary → Add Expense accordion → Filters → List
+
+---
+
+### Phase 6 — Visual Polish (30 min)
+- Verify against DESIGN.md tokens
+- Animation: card fade-in, skeleton shimmer, button press, summary number transition
+- Mobile breakpoint test (375px, 768px, 1280px)
+- Accessibility: focus rings (teal outline), aria-labels, keyboard nav
+
+---
 
 ### Phase 7 — Backend API Routes (60 min)
-- `app/api/expenses/route.ts` — GET + POST with Prisma + idempotency
-- `app/api/expenses/categories/route.ts` — GET distinct categories
+- `app/api/expenses/route.ts`
+  - `GET`: filter by category, sort, Prisma query, compute visible total
+  - `POST`: Zod validate → Prisma upsert on idempotencyKey → return formatted expense
+- `app/api/expenses/categories/route.ts`
+  - `GET`: Prisma `findMany` distinct categories
+
+---
 
 ### Phase 8 — Wire Frontend to Backend (20 min)
 - Remove `lib/mock-data.ts`
-- Switch hooks from mock to real API
+- Switch `useExpenses` + `useCategories` from mock to real fetch
 - Test all interactions end-to-end
 
+---
+
 ### Phase 9 — Tests + README (45 min)
-- Money utils unit tests (Vitest)
+- Money utils unit tests
 - API integration test for idempotent create
-- Update README with architectural decisions
+- Update `README.md` with design decisions, architecture, trade-offs
 
 ---
 
-## Key Technical Decisions
+## Key Technical Rules (non-negotiable)
 
-### Money Handling
-- Store as **integer paise** (₹1 = 100 paise) — already in Prisma schema (`amount Int`)
-- Display via `Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' })`
-- Never use JavaScript floats for money math
-
-### Idempotency
-- `crypto.randomUUID()` generated when form mounts
-- Same key preserved across retries (network error path)
-- New key generated only on successful submission
-- `idempotencyKey @unique` in Prisma schema enforces server-side deduplication
-
-### State Architecture
-- **Filter state** → URL search params (survives refresh, shareable)
-- **Form state** → `useState` (local)
-- **Data** → native `fetch` + `useEffect` + `useState` (no SWR/TanStack)
-
-### Design System
-- Tailwind CSS v4 with CSS custom properties
-- All tokens defined in `:root` in `globals.css`
-- No inline styles, no arbitrary Tailwind values — only design token classes
+| Rule | Implementation |
+|------|---------------|
+| Integer paise for money | `amount Int` in Prisma schema ✅ |
+| Idempotency | `idempotencyKey @unique` in schema ✅ · `crypto.randomUUID()` on form mount |
+| Filter state | URL search params (`useSearchParams`, `useRouter`) |
+| No float math | All sums via `sumPaise(items)` utility |
+| Retry-safe | Preserve UUID on network error, regenerate only on success |
+| Amounts: IBM Plex Mono | ALWAYS. Every rupee amount uses font-mono |
+| pnpm only | Never `npm install` — project uses `pnpm@10.30.3` |
 
 ---
 
-## Stitch MCP Prompt (Phase 0)
+## Category Colors (deterministic, 8 presets)
 
-```
-Use the Stitch MCP to fetch my [PROJECT_NAME] project.
-
-Extract:
-- Full color palette (all tokens)
-- Typography: font families, sizes, weights, line heights
-- Spacing system
-- Border radius values
-- Shadow values
-- Component styles: buttons, inputs, cards, badges
-
-Generate:
-1. A DESIGN.md file in the root directory documenting all extracted values
-2. Update app/globals.css to map these values to CSS custom properties
-   following Tailwind v4 @theme inline convention
-```
+| Category | Background | Text |
+|----------|-----------|------|
+| Food | `#FEF3C7` | `#92400E` |
+| Travel | `#DBEAFE` | `#1E40AF` |
+| Bills | `#FCE7F3` | `#9D174D` |
+| Shopping | `#EDE9FE` | `#5B21B6` |
+| Health | `#D1FAE5` | `#065F46` |
+| Entertainment | `#FFE4E6` | `#9F1239` |
+| Education | `#E0F2FE` | `#0C4A6E` |
+| Other | `#F1F5F9` | `#475569` |
 
 ---
 
-## Risk Mitigations
-
-| Risk | Mitigation |
-|------|-----------|
-| Float drift in money | Integer paise everywhere; format only at display layer |
-| Duplicate expense on retry | UUID idempotency key + Prisma `@unique` + catch duplicate error |
-| Filter state lost on refresh | URL search params as source of truth |
-| Overdesigned UI hurts trust | Follow PERPLEX principle: calm, legible, never flashy |
-| Stitch MCP unavailable | Design fallback defined in this plan |
-
----
-
-*Created: May 1, 2026 — pending user approval on 3 design decisions above*
+*Updated: May 1, 2026 — All design decisions locked. Ready for execution.*
