@@ -120,7 +120,10 @@ export const MOCK_EXPENSES: Expense[] = [
  * Returns filtered expenses and computed meta for a given category filter.
  * Mirrors the server response shape exactly so switching to real API is a drop-in.
  */
-export function getMockExpenses(category: string | null): {
+export function getMockExpenses(
+  category: string | null,
+  sortDesc: boolean = true
+): {
   items: Expense[];
   meta: ExpenseMeta;
 } {
@@ -129,10 +132,12 @@ export function getMockExpenses(category: string | null): {
       ? MOCK_EXPENSES.filter((e) => e.category === category)
       : [...MOCK_EXPENSES];
 
-  // Always sorted newest-first
-  items.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  // Apply dynamic sorting
+  items.sort((a, b) => {
+    const timeA = new Date(a.date).getTime();
+    const timeB = new Date(b.date).getTime();
+    return sortDesc ? timeB - timeA : timeA - timeB;
+  });
 
   const visibleTotal = sumPaise(items.map((e) => e.amount));
 

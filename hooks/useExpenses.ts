@@ -20,7 +20,7 @@ function fetchExpenses(filters: ExpenseFilters): Promise<ExpenseListResponse> {
   return new Promise((resolve) => {
     // Simulate a brief network delay for realistic skeleton UX
     setTimeout(() => {
-      resolve(getMockExpenses(filters.category));
+      resolve(getMockExpenses(filters.category, filters.sortDesc));
     }, 400);
   });
 }
